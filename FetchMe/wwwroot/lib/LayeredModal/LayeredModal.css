@@ -1,0 +1,32 @@
+﻿/*layered Modals*/
+.modal.z-1 {
+    z-index: 1051 !important;
+}
+
+.modal-backdrop.show.z-1 {
+    z-index: 1050 !important;
+}
+
+.modal.z-2 {
+    z-index: 1053 !important;
+}
+
+.modal-backdrop.show.z-2 {
+    z-index: 1052 !important;
+}
+
+.modal.z-3 {
+    z-index: 1055 !important;
+}
+
+.modal-backdrop.show.z-3 {
+    z-index: 1054 !important;
+}
+
+.modal.z-4 {
+    z-index: 1057 !important;
+}
+
+.modal-backdrop.show.z-4 {
+    z-index: 1056 !important;
+}

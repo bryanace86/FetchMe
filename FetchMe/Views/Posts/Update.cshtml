@@ -1,0 +1,35 @@
+﻿@model FetchMe.Models.PostModels.PostVM
+
+<div id="post-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="post-edit-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-form-margin">
+
+            @await Html.PartialAsync("~/views/shared/Modal/ModalCloseHeader.cshtml")
+
+            <div class="modal-body rounded-bottom h-100 overflow-auto">
+                <form id="post-edit-form" asp-controller="Posts" asp-action="Update">
+                    <input asp-for="BlogId" hidden="hidden" />
+                    <input asp-for="Id" hidden="hidden" />
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" type="text" class="form-control" />
+                    <label asp-for="Slug" class="control-label"></label>
+                    <input asp-for="Slug" type="text" class="form-control" />
+                    <label asp-for="Body" class="control-label"></label>
+                    <textarea asp-for="Body" class="form-control">
+				        Default text
+			        </textarea>
+                    <label asp-for="ShortDescription" class="control-label"></label>
+                    <textarea asp-for="ShortDescription" class="form-control">
+				        Default text
+			        </textarea>
+                    <label asp-for="ThumbnailId" class="control-label"></label>
+                    <input asp-for="ThumbnailId" type="text" class="form-control" />
+                </form>
+            </div>
+
+            @await Html.PartialAsync("~/views/shared/Modal/ModalCreateFooter.cshtml", "post-edit-form")
+
+        </div>
+    </div>
+</div>
+

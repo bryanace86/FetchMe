@@ -1,0 +1,316 @@
+﻿
+/*Scroll Bar*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: #272b30 !important;
+    box-shadow: inset 3px 3px 5px 1px rgba(0,0,0, .5) !important;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(0, 0, 0) !important;
+    border: 1px solid #272b30;
+}
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:active {
+        background-color: black !important;
+        border: 1px solid white;
+        box-shadow: inset 1px 1px 2px 2px rgba(255,255,255, .15) !important;
+    }
+
+.side-drawer {
+    flex-grow: 1;
+    overflow: auto;
+    position: fixed;
+    z-index: 1050;
+}
+
+    .side-drawer.collapsing {
+        margin-left: -10% !important;
+        transition: all .2s linear !important;
+    }
+
+.bg-black {
+    background-color: black;
+}
+
+.bg-gray-1 {
+    background-color: #F0F0F0;
+}
+
+.bg-gray-2 {
+    background-color: #DCDCDC;
+}
+
+.bg-gray-3 {
+    background-color: #D0D0D0;
+}
+
+.bg-gray-4 {
+    background-color: #BEBEBE;
+}
+
+.bg-gray-5 {
+    background-color: #A9A9A9;
+}
+
+.bg-gray-6 {
+    background-color: #989898;
+}
+
+.bg-gray-7 {
+    background-color: #808080;
+}
+
+.bg-gray-8 {
+    background-color: #696969;
+}
+
+.bg-gray-9 {
+    background-color: #52575c;
+}
+
+.bg-gray-10 {
+    background-color: #404040;
+}
+
+.bg-gray-11 {
+    background-color: #3A3F44;
+}
+
+.bg-gray-12 {
+    background-color: #101010;
+}
+
+.bg-white {
+    background-color: black;
+}
+/*Box Shadows*/
+.box-shadow {
+    box-shadow: 0px 4px 8px 2px rgba(0,0,0,.75)
+}
+
+.box-shadow-left {
+    box-shadow: -4px 0px 8px 2px rgba(0,0,0,.75);
+}
+
+.box-shadow-right {
+    box-shadow: 4px 0px 8px 2px rgba(0,0,0,.75);
+}
+
+.box-shadow-bottom {
+    box-shadow: 0px 4px 8px 2px rgba(0,0,0,.75);
+}
+
+.box-shadow-top {
+    box-shadow: 0px -4px 8px 2px rgba(0,0,0,.75);
+}
+
+.box-shadow-bottom-inset {
+    box-shadow: inset 0px 4px 8px 2px rgba(0,0,0,.75);
+}
+
+.box-shadow-top-inset {
+    box-shadow: inset 0px -4px 8px 2px rgba(0,0,0,.75);
+}
+
+/*Select 2*/
+.select2-dropdown--below {
+    z-index: 10000 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #dee2e6 !important;
+    line-height: 28px;
+}
+
+.select2-search__field {
+    width: 100% !important;
+    color: white;
+}
+
+.select2-selection__placeholder {
+    color: #dee2e6 !important;
+}
+
+.select2-search__field::placeholder {
+    color: #dee2e6 !important;
+    font-weight: bold;
+}
+
+.select2-selection {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    padding-left: 10px;
+}
+
+.select2-selection, select2-selection__rendered {
+    background-color: #52575c !important;
+    color: #dee2e6 !important;
+    border: black 1px solid !important;
+    box-shadow: 3px 3px 5px 1px rgba(0,0,0, .5) !important;
+}
+
+.select2.select2-container--focus > .selection > .select2-selection,
+.select2.select2-container--focus > .selection > .select2-selection:focus {
+    background-color: black !important;
+    color: #dee2e6 !important;
+    border: white 1px solid !important;
+    box-shadow: 0 0 5px 1px rgba(255,255,255, .5) !important;
+}
+
+.select2.select2-container--open > .selection > .select2-selection {
+    background-color: black !important;
+    color: #dee2e6 !important;
+    border: white 1px solid !important;
+    box-shadow: 0 0 5px 1px rgba(255,255,255, .5) !important;
+}
+
+span.select2-selection.select2-selection--single {
+    outline: none !important;
+    height: 39px !important;
+    padding-top: 5px !important;
+    padding-left: 8px;
+}
+
+.select2-selection__arrow {
+    margin-top: 5px !important;
+}
+
+.select2-selection__choice {
+    background-color: black !important;
+    border: 1px solid white;
+    color: white;
+}
+
+
+
+/*Select2 Dropdown*/
+.select2-container--open > .select2-dropdown {
+    background-color: black !important;
+}
+
+    .select2-container--open > .select2-dropdown > span > .select2-search__field {
+        outline: none !important;
+        background-color: #52575c !important;
+        color: #dee2e6 !important;
+        border-radius: 4px;
+        border: black 1px solid !important;
+        box-shadow: 3px 3px 5px 1px rgba(0,0,0, .5) !important;
+    }
+
+        .select2-container--open > .select2-dropdown > span > .select2-search__field:focus {
+            background-color: black !important;
+            color: #dee2e6 !important;
+            border: white 1px solid !important;
+            box-shadow: 0 0 5px 1px rgba(255,255,255, .5) !important;
+        }
+
+
+/*
+        to keep Google autocomplete on top
+        */
+.pac-container {
+    z-index: 10000 !important;
+}
+
+/*horizontal image gallery styles*/
+.hide-pointer {
+    pointer-events: none;
+}
+
+.thumb {
+    height: 100%;
+    display: inline-block;
+    position: relative;
+    margin-right: 5px;
+}
+
+    .thumb > img {
+        display: block;
+    }
+
+.caption {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    background-color: black;
+}
+
+.thumb:hover .caption {
+    opacity: .75;
+}
+
+/*Ring*/
+@-webkit-keyframes wiggle {
+    from {
+        -webkit-transform: rotateZ(0deg);
+    }
+
+    4% {
+        -webkit-transform: rotateZ(-20deg);
+    }
+
+    8% {
+        -webkit-transform: rotateZ(20deg);
+    }
+
+    12% {
+        -webkit-transform: rotateZ(-20deg);
+    }
+
+    16% {
+        -webkit-transform: rotateZ(20deg);
+    }
+
+    20% {
+        -webkit-transform: rotateZ(0deg);
+    }
+
+    to {
+        -webkit-transform: rotateZ(0deg);
+    }
+}
+
+.fa-wiggle {
+    -webkit-animation-name: wiggle;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+}
+
+
+/*Photographer styles*/
+.photographers-horizontal > .card {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+/*Photograph styles*/
+.aligner-item {
+    Display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.modal-form-margin{
+    margin-bottom:250px;
+}
+
+.img-cover {
+    object-fit: cover;
+}

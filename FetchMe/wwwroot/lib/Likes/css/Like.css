@@ -1,0 +1,13 @@
+﻿.picta-like {
+}
+
+.picta-like:hover {
+    cursor:pointer;
+}
+
+    .picta-like.dark-red {
+        color: red;
+    }
+        .picta-like.dark-red:hover {
+            color: darkred;
+        }

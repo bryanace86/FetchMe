@@ -1,0 +1,226 @@
+﻿@using FetchMe.Models.PhotographerModels
+@model PhotographerSearchResults
+@{
+    ViewData["Title"] = "Photographers";
+}
+
+<style>
+    
+</style>
+
+@section PageSearch{
+
+    <div class="d-flex flex-grow-1 justify-content-end">
+        <button type="submit" class="btn btn-light" data-toggle="modal" data-target="#index-photographer-grid-search-modal" aria-expanded="false" aria-controls="index-photographer-grid-search-modal">
+            <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+            <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+        </button>
+    </div>
+}
+
+<!--List of Photographers-->
+<div class="container py-3">
+    <div id="index-photographer-grid-search-container d-none" class="w-100">
+
+        @await Html.PartialAsync("~/Views/Photographers/IndexItemLoop.cshtml", Model.Photographers)
+        
+    </div>
+
+    <div id="index-photographer-grid" class="w-100">
+    </div>
+    <div class="d-flex flex-row">
+        @if (Model.Search.PageIndex > 0)
+        {
+            <a id="previous-page" href="#" class="btn btn-light flex-fill mx-2">Previous</a>
+        }
+        @if (Model.Photographers.Count == Model.Search.PageSize)
+        {
+            <a id="next-page" href="#" class="btn btn-light flex-fill mx-2">Next</a>
+        }
+    </div>
+</div>
+
+
+<div id="index-photographer-grid-search-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="index-photographer-grid-search-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content h-100 w-100 bg-black text-light modal-form-margin">
+            <div class="modal-header justify-content-end p-2">
+                <div data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-sm btn-outline-light carousel-close" aria-hidden="true"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div id="index-photographer-grid-search-div" class="modal-body rounded-bottom h-100 overflow-auto">
+                <form id="index-photographer-grid-search" class="d-flex text-light p-2 mb-2 w-100 search-form" autocomplete="off">
+                    <div class="d-flex flex-column w-100">
+
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <select hidden="hidden" name="PhotographTagIds" class="form-control js-tags PhotographTagIds" placeholder="Tags" data-placeholder="Tags" data-get-data="GetPhotographTags" multiple="multiple" style="width:100%; height:100%;">
+                                @if (Model.Search.PhotographTagIds != null)
+                                {
+                                    foreach (var photographTag in Model.Search.PhotographTagIds)
+                                    {
+                                        <option id="@photographTag" value="@photographTag" selected>@photographTag</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <hr>
+                        <h4>Photographer Details</h4>
+                        <div class="form-group">
+                            <label>Photographers Name</label>
+                            <select hidden="hidden" name="PhotographerName" class="form-control js-tags PhotographerName" data-placeholder="Photographer Names" data-get-data="GetPhotographerNames" multiple="multiple">
+                                @if (Model.Search.PhotographerName != null)
+                                {
+                                    @foreach (var photographerName in Model.Search.PhotographerName)
+                                    {
+                                        <option id="@photographerName" value="@photographerName" selected>@photographerName</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        @*
+                            <div class="form-group">
+                                <label>YearsExperience</label>
+                                <input type="number" name="YearsExperience" class="form-control YearsExperience" data-placeholder="YearsExperience" />
+                            </div>
+                        *@
+                        <hr>
+                        <!--Location-->
+                        <h4>Location</h4>
+                        <div class="d-flex flex-row flex-wrap">
+                            <div class="locationFields form-group flex-grow-1">
+                                <label for="Location">Location:</label>
+                                <input id="index-photographer-grid-search-location" name="Location.FormattedAddress" class="form-control location-field location-autocomplete" placeholder="Enter your address" type="text" value="@(Model.Search.Location != null ? Model.Search.Location.FormattedAddress : "")" />
+                                <input hidden="hidden" name="Location.Lat" class="form-control location-field lat" value="@(Model.Search.Location != null ? Model.Search.Location.Lat : 0)" />
+                                <input hidden="hidden" name="Location.Lng" class="form-control location-field lng" value="@(Model.Search.Location != null ? Model.Search.Location.Lng : 0)" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Distance">Distance:</label>
+                                <select name="Distance" class="form-control Distance">
+                                    @{
+                                        int[] distances = { 0, 10, 25, 50, 100 };
+
+                                        foreach (var distance in distances)
+                                        {
+                                            if (distance == 0)
+                                            {
+                                                if (Model.Search.Distance == 0)
+                                                {
+                                                    <option value="10" selected>Miles</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="10">Miles</option>
+                                                }
+                                            }
+                                            else if (Model.Search.Distance == distance)
+                                            {
+                                                <option value="@distance" selected>@distance</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@distance">@distance</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4><label>Is Insured</label></h4>
+                        <!--favorites-->
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input IsInsured" name="IsInsured" id="index-photographer-grid-IsInsured" autocomplete="off" value="true" checked="@Model.Search.IsInsured">
+                            <label class="custom-control-label" for="index-photographer-grid-IsInsured">Only show insured Photographers</label>
+                        </div>
+                        <hr>
+                        <h4><label>Show Favorites</label></h4>
+                        <!--favorites-->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input ShowFavorites" id="index-photographer-grid-ShowFavorites" name="ShowFavorites" autocomplete="off" value="true" checked="@Model.Search.ShowFavorites">
+                                <label class="custom-control-label" for="index-photographer-grid-ShowFavorites">Only Show My Favorites.</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex mb-4">
+                                Log in to see your favorite photographs.
+                            </div>
+                        }
+                    </div>
+
+                    <input hidden="hidden" name="PageIndex" value="@Model.Search.PageIndex" />
+                    <input hidden="hidden" name="PageSize" value="@Model.Search.PageSize" />
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="index-photographer-grid-search" class="btn btn-light">
+                    <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                    <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <!--Create grid for photographers-->
+    <script>
+        $(document).ready(function () {
+
+            setGridSearchFormMapsAutocomplete($("#index-photographer-grid-search-modal"));
+            
+            //Set up image grids
+            var data = @Html.Raw(Json.Serialize(Model.Photographers));
+            var formData = @Html.Raw(Json.Serialize(Model.Search));
+            $.each(data, function (i, val) {
+                var search = {
+                    //distance: $('#distance').val(),
+                    photographerSlug: val.slug,
+                    photographTagIds: formData.PhotographTagIds
+                };
+
+                $("#" + val.slug + "-image-grid").FetchMeGallery({
+                    scrollDirection: "horizontal",
+                    hasModal: true,
+                    modal: {
+                        templateId: "#photograph-index-modal",
+                        modalItemTemplateId: "#photograph-index-modal-item"
+                    },
+                    itemLoading: {
+                        method: 'POST',
+                        url: '/Photographs/PhotographSearch',
+                        templateId: '#photograph-index-item'
+                    },
+                    search: search,
+                    hasData: true,
+                    data: data[i].photographs
+
+                });
+
+            });
+
+            //set up pagination
+            $("#previous-page").click(function () {
+                var pageIndexEl = $("#index-photographer-grid-search").find('input[name="PageIndex"]');
+                var newPage = parseInt(pageIndexEl.val()) - 1;
+                pageIndexEl.val(newPage);
+                $("#index-photographer-grid-search").submit();
+            });
+            $("#next-page").click(function () {
+                var pageIndexEl = $("#index-photographer-grid-search").find('input[name="PageIndex"]');
+                var newPage = parseInt(pageIndexEl.val()) + 1;
+                pageIndexEl.val(newPage);
+                $("#index-photographer-grid-search").submit();
+            });
+        });
+    </script>
+}

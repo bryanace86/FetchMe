@@ -1,0 +1,115 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-FetchMe-CC27FFEE-FE2E-443D-BA64-F046E1B7054C</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200626040633_models.cs" />
+    <Compile Remove="Data\Migrations\20200626040633_models.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200626041057_modelsAdded.cs" />
+    <Compile Remove="Data\Migrations\20200626041057_modelsAdded.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200626041758_modelsAdded.cs" />
+    <Compile Remove="Data\Migrations\20200626041758_modelsAdded.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200628035638_stringlocationId.cs" />
+    <Compile Remove="Data\Migrations\20200628035638_stringlocationId.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200629134214_photographTagsMig.cs" />
+    <Compile Remove="Data\Migrations\20200629134214_photographTagsMig.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200716113540_imageSizes.cs" />
+    <Compile Remove="Data\Migrations\20200716113540_imageSizes.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200801123907_galleries.cs" />
+    <Compile Remove="Data\Migrations\20200801123907_galleries.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200807200206_applicationUser.cs" />
+    <Compile Remove="Data\Migrations\20200807200206_applicationUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200810120222_userProperties.cs" />
+    <Compile Remove="Data\Migrations\20200810120222_userProperties.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200818115929_support.cs" />
+    <Compile Remove="Data\Migrations\20200818115929_support.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200820032205_blog.cs" />
+    <Compile Remove="Data\Migrations\20200820032205_blog.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200824201301_blogThumbnails.cs" />
+    <Compile Remove="Data\Migrations\20200824201301_blogThumbnails.Designer.cs" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.4.4" />
+    <PackageReference Include="Geolocation" Version="1.2.1" />
+    <PackageReference Include="MailChimp.Net.V3.Core" Version="1.11.0" />
+    <PackageReference Include="MailKit" Version="2.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="MimeKit" Version="2.9.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SkiaSharp" Version="1.68.3" />
+    <PackageReference Include="System.Net.Http.Formatting.Extension" Version="5.2.3" />
+    <PackageReference Include="Vereyon.Web.FlashMessage" Version="2.0.0" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.0.53" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ConfirmEmail.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ForgotPassword.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Lockout.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Login.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\LoginWith2fa.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\LoginWithRecoveryCode.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Logout.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\Email.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\EnableAuthenticator.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\Index.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\PersonalData.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\SetPassword.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_Layout.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_StatusMessage.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Register.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ResendEmailConfirmation.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ResetPassword.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\_StatusMessage.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\Error.cshtml" />
+    <None Include="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Identity\Pages\_ViewImports.cshtml" />
+    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
+    <None Include="wwwroot\images\SiteImages\wave.svg" />
+    <None Include="wwwroot\images\SiteImages\wave2.svg" />
+    <None Include="wwwroot\images\SiteImages\wave3.svg" />
+    <None Include="wwwroot\lib\justifiedGallery\jquery.justifiedGallery.min.js" />
+    <None Include="wwwroot\lib\Likes\js\Like.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Views\Locations\" />
+  </ItemGroup>
+
+</Project>

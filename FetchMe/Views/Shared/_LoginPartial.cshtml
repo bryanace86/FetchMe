@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var claims = User.Claims.ToList();
+    var role = (User.HasClaim(x => x.Type == "Role")) ? @claims.FirstOrDefault(x => x.Type == "Role").Value.ToString() : "Customer";
+    
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link bg-light text-dark border-top border-bottom border-dark" href="" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                <i class="fas fa-cogs fa-fw pr-2" aria-hidden="true"></i>
+                Mannage
+            </a>
+        </li>
+    </ul>
+    <div id="collapse3" class="panel-collapse collapse">
+        <ul class="nav nav-pills flex-column navbar-dark">
+            @switch (role)
+            {
+                case "Photographer":
+                    var photographerSlug = @claims.FirstOrDefault(x => x.Type == "PhotographerSlug").Value.ToString();
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Photographs?PhotographerSlug=@photographerSlug">
+                            My Images
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="PhotographerServiceableCities" asp-action="Create">
+                            My Locations
+                        </a>
+                    </li>
+                    @*
+                        <a class="dropdown-item" asp-controller="Availability" asp-action="Index">Availability</a>
+                    *@
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Photographers/Edit/@photographerSlug">
+                            My Profile
+                        </a>
+                    </li>
+                    @*
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Membership" asp-action="Join">
+                            Manage Membership
+                        </a>
+                    </li>
+                    *@
+                    break;
+                case "Customer":
+                    @*
+                        <div class="dropdown-item"><a class="btn btn-outline-success" asp-controller="Membership" asp-action="Join">Become a Photographer</a></div>
+                        <div class="dropdown-item"><partial name="Photographers/_CreateOrEditProfileBtn" /></div>
+                        <div class="dropdown-divider"></div>
+                    *@
+                    break;
+                default:
+                    break;
+            }
+
+            @*
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Support" asp-action="Index">
+                    <i class="fas fa-question fa-fw pr-2"></i>
+                    Support
+                </a>
+            </li>
+            *@
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <i class="fas fa-user-cog fa-fw"></i>
+                    Account
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:document.getElementById('logout').submit();">
+                    <i class="fas fa-sign-out-alt fa-fw pr-2" aria-hidden="true"></i>
+                    Log Out
+                </a>
+                <form id="logout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                </form>
+
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <ul class="nav nav-pills flex-column navbar-dark">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt fa-fw pr-2" aria-hidden="true"></i>
+                Log In / Join
+            </a>
+        </li>
+    </ul>
+
+}

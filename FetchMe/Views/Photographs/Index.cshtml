@@ -1,0 +1,116 @@
+﻿@using FetchMe.Models.PhotographModels
+@model PhotographSearchResults
+@{
+    ViewData["Title"] = "Photographs";
+}
+
+
+@section PageSearch{
+
+    <div class="d-flex flex-grow-1 justify-content-end">
+
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole("Photographer"))
+            {
+                int imageCount = Convert.ToInt32(ViewData["ImagesRemaining"]);
+                @if (imageCount > 0 || imageCount == -1)
+                {
+                    <a class="btn btn-primary mr-2" asp-controller="Photographs" asp-action="Create">
+                        <span class="d-none d-sm-inline-block">
+                            Add Photograph
+                        </span>
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-primary mr-2" data-toggle="tooltip" data-placement="bottom" title="You have met your image limit. Upgrade your account to get unlimited uploads.">
+                        <span class="d-none d-sm-inline-block">
+                            Add Photograph
+                        </span>
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                }
+            }
+            else
+            {
+                <button class="btn btn-primary mr-2" data-toggle="tooltip" data-placement="bottom" title="Become a photographer to add photographs.">
+                    <span class="d-none d-sm-inline-block">
+                        Add Photograph
+                    </span>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+            }
+
+        }
+
+        <button type="submit" class="btn btn-light" data-toggle="modal" data-target="#index-photograph-grid-search-modal" aria-expanded="false" aria-controls="index-photograph-grid-search-modal">
+            <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+            <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+        </button>
+    </div>
+}
+
+
+<div id="index-photograph-grid">
+    
+</div>
+
+<div id="index-photograph-grid-loader" class="d-flex justify-content-center pb-3">
+    <i class="fas fa-spinner fa-spin fa-5x d-none"></i>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Photographs));
+            var formData = @Html.Raw(Json.Serialize(Model.Search));
+
+            var windowWidth = window.innerWidth;
+            var defaultPageSize = (function () {
+                switch (true) {
+                    case windowWidth < 450:
+                        return 5;
+                    case windowWidth > 450:
+                        return 25;
+                    default:
+                        return 5;
+                }
+            })(5);
+
+            $("#index-photograph-grid").FetchMeGallery({
+                gridType: "Justified",
+                hasForm: true,
+                form: {
+                    templateId: "#photograph-index-search",
+                    formData: formData,
+                    pushToHistory: true,
+                    formContainer: "body"
+                    //formId: "#photographs-search",
+                    //formModal: "#photographs-search-modal"
+                },
+                hasModal: true,
+                modal: {
+                    templateId: "#photograph-index-modal",
+                    modalItemTemplateId: "#photograph-index-modal-item"
+                },
+                search: {
+                    pagingType: "dateRange",
+                    pageSize: defaultPageSize
+                },
+                itemLoading: {
+                    method: 'POST',
+                    url: '/Photographs/PhotographSearch',
+                    templateId: '#photograph-index-item'
+                },
+                hasData: true,
+                data: data
+            });
+
+        });
+    </script>
+
+}

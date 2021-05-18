@@ -1,0 +1,105 @@
+﻿<div class="d-flex flex-column">
+    <div class="container pt-3">
+        <div id="userManagementCards" class="row">
+
+            <div class="col-sm-12 col-md-6 mb-3">
+                <div class="rounded box-shadow text-wrap">
+                    <ul class="nav flex-column">
+                        <li class="nav-item rounded-top">
+                            <div class="nav-link bg-light text-dark border-top border-bottom border-dark rounded-top" href="" data-toggle="collapse" data-target="#photographer-create-menue-options" aria-expanded="true" aria-controls="photographer-create-menue-options">
+                                <i class="far fa-user fa-fw fa-2x pr-2"></i>
+                                <span class="h4 text-dark">Personal Profile</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column navbar-dark">
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="UserProfile" asp-action="UpdateDetails">
+                                <i class="far fa-user fa-fw pr-2" aria-hidden="true"></i>
+                                Edit Profile
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12 col-md-6 mb-3">
+                <div class="rounded box-shadow text-wrap">
+                    <ul class="nav flex-column">
+                        <li class="nav-item rounded-top">
+                            <div class="nav-link bg-light text-dark border-top border-bottom border-dark rounded-top" href="" data-toggle="collapse" data-target="#photographer-create-menue-options" aria-expanded="true" aria-controls="photographer-create-menue-options">
+                                <i class="fas fa-camera fa-fw fa-2x pr-2"></i>
+                                <span class="h4 text-dark">Photographer Profile</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column navbar-dark">
+
+                        @{
+                            var claims = User.Claims.ToList();
+                            var role = (User.HasClaim(x => x.Type == "Role")) ? @claims.FirstOrDefault(x => x.Type == "Role").Value.ToString() : "Customer";
+
+                            if (User.IsInRole("Photographer"))
+                            {
+
+                                ViewBag.PhotographerSlug = @claims.FirstOrDefault(x => x.Type == "PhotographerSlug")?.Value?.ToString();
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/Photographers/@ViewBag.PhotographerSlug">
+                                        <i class="far fa-user fa-fw pr-2" aria-hidden="true"></i>
+                                        Profile
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="PhotographersLocations" asp-action="Create">
+                                        <i class="fas fa-map-marked fa-fw pr-2" aria-hidden="true"></i>
+                                        Locations
+                                    </a>
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Photographers" asp-action="Create">
+                                        <i class="fas fa-compass fa-fw pr-2" aria-hidden="true"></i>
+                                        Become a Photographer!
+                                    </a>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12 col-md-6 mb-3">
+                <div class="rounded box-shadow text-wrap">
+                    <ul class="nav flex-column">
+                        <li class="nav-item rounded-top">
+                            <div class="nav-link bg-light text-dark border-top border-bottom border-dark rounded-top" href="" data-toggle="collapse" data-target="#photographer-create-menue-options" aria-expanded="true" aria-controls="photographer-create-menue-options">
+                                <i class="far fa-user fa-fw fa-2x pr-2"></i>
+                                <span class="h4 text-dark">Support</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column navbar-dark">
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Support" asp-action="Index">
+                                <i class="far fa-user fa-fw pr-2" aria-hidden="true"></i>
+                                Support Tickets
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,153 @@
+﻿@using FetchMe.Models.SupportModels;
+@model FetchMe.Models.SupportModels.SupportTicketIndex
+
+@{
+    ViewData["Title"] = "Support";
+}
+
+@section PageSearch{
+    <partial name="~/Views/Support/SearchForm.cshtml" />
+}
+
+<div id="support-search-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="support-search-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content h-100 w-100 bg-black text-light">
+            <div class="modal-header justify-content-end p-2">
+                <div data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-sm btn-outline-light carousel-close" aria-hidden="true"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div id="support-search-div" class="modal-body rounded-bottom h-100 overflow-auto">
+
+                <form id="support-search" class="d-flex flex-grow-1 p-3"
+                      asp-controller="Support"
+                      asp-action="Index"
+                      method="post"
+                      autocomplete="off">
+
+                    <select class="form-control ml-1 mr-3" name="Status" asp-items="ViewBag.AvailableStatuses">
+                        <option value="0" selected disabled>Select Status</option>
+                    </select>
+                    <select class="form-control mr-2" name="OrderBy" asp-items="ViewBag.AvailableOrdinals">
+                        <option value="0" selected disabled>Sort By</option>
+                    </select>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="support-search" class="btn btn-light" >
+                    <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                    <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="container pt-3">
+        <div class="rounded box-shadow">
+            <div class="bg-light rounded-top">
+                <h1 class="text-center text-dark">Create a new ticket</h1>
+            </div>
+            <form class="p-3" asp-controller="Support" asp-action="Create">
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.CreateTicket.Title)</label>
+                    <input asp-for="CreateTicket.Title" class="form-control" data-placeholder="@Html.DisplayNameFor(m => m.CreateTicket.Title)" />
+                    <span asp-validation-for="CreateTicket.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.CreateTicket.Body)</label>
+                    <textarea asp-for="CreateTicket.Body" class="form-control" data-placeholder="@Html.DisplayNameFor(m => m.CreateTicket.Body)"></textarea>
+                    <span asp-validation-for="CreateTicket.Body" class="text-danger"></span>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-light">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container pt-3">
+
+        @foreach (SupportTicketDetails ticket in Model.Tickets)
+        {
+            <button type="button" class="btn btn-light w-100 mb-3" id="@ticket.Id" data-toggle="modal" data-target="#support-details-modal" onclick="GetSupportTicket('@ticket.Id')">
+
+                <div class="d-flex flex-row">
+
+                    <span class="h3 text-dark">@ticket.Title</span>
+
+                </div>
+
+                <div class="d-flex flex-row">
+
+                    <div class="flex-grow-1 text-left">@ticket.Created</div>
+                    <div class="px-2">@ticket.Status.Status</div>
+                    @if (@ticket.HasNotViewed)
+                    {
+                        <i class="fa fa-2x px-2 fa-comments-o fa-lg fa-wiggle" aria-hidden="true"></i>
+                    }
+
+                </div>
+
+            </button>
+
+        }
+    </div>
+
+
+<partial name="~/Views/Support/DetailsModal.cshtml" />
+
+@section Scripts {
+
+    <script>
+        function GetSupportTicket(id) {
+
+            $.ajax({
+                type: 'GET',
+                url: '/Support/Details/' + id,
+                success: function (data) {
+                    $('#support-details-modal-body').html(data);
+
+                    $('#response-form').submit(function () {
+                        event.preventDefault();
+                        console.log('submitted');
+
+                        var form = $('#response-form')
+
+                        $.ajax({
+                            type: form.attr('method'),
+                            url: form.attr('action'),
+                            data: form.serializeArray(),
+                            success: function (data) {
+                                $("#ticket-responses").prepend(data).slideDown("slow");
+                                $("#ticket-responses .response:first-child").addClass('bg-light color-secondary');
+                                $("#ticket-responses .response:first-child").fadeOut("slow", function () {
+                                    $(this).removeClass('bg-light color-dark');
+                                });
+                            },
+                            complete: function (data) {
+                            },
+                            error: function (data) {
+                            }
+                        });
+
+                    });
+
+                },
+                complete: function (data) {
+
+                },
+                error: function (data) {
+                    //console.log('fail');
+                    //console.log(data);
+                }
+            });
+
+        }
+    </script>
+
+}

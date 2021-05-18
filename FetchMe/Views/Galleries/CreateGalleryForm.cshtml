@@ -1,0 +1,31 @@
+﻿@model FetchMe.Models.GalleryModels.ImageGalleryCreateOptionsVM
+<form id="createGalleryForm" asp-controller="Galleries" asp-action="PostGallery" method="post">
+    <input id="ImageGalleryCreateImageId" name="ImageId" value="@Model.ImageId" hidden="hidden"/>
+    <div class="form-group">
+        <label @*asp-for="FirstName"*@></label>
+        <input class="form-control" name="Title" placeholder="Gallery Title" />
+        <span class="text-danger"></span>
+    </div>
+    @if (Model.IsOwnerOfImage)
+    {
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="ShowGalleryInPhotographerProfile" name="IsProfessional" value="true" @*asp-for=""*@>
+            <label class="custom-control-label" for="ShowGalleryInPhotographerProfile">Show in photographer profile.</label>
+            <span @*asp-validation-for=""*@ class="text-danger"></span>
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="This gallery will be desplayed on your photographer profile and can only have your images in it."></i>
+        </div>
+    }
+    <div class="form-group mb-0">
+        <h4>Gallery Privacy</h4>
+        <div class="custom-control custom-radio">
+            <input type="radio" id="IsPublic" name="IsPublic" class="custom-control-input" checked="" value="true">
+            <label class="custom-control-label" for="GalleryPublic">Public</label>
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Everyone will be able to see this gallery"></i>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" id="GalleryPrivate" name="IsPublic" class="custom-control-input" value="false">
+            <label class="custom-control-label" for="GalleryPrivate">Private</label>
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Only you will be able to see this gallery"></i>
+        </div>
+    </div>
+</form>

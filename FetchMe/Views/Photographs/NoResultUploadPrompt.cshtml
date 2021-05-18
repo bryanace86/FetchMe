@@ -1,0 +1,12 @@
+﻿@if (User.IsInRole("Photographer"))
+{
+    <div class="text-center align-content-center pt-3">
+        <div>
+            <h2>We didn't find any photographs</h2>
+            <h4>Please upload some</h4>
+            <a class="btn btn-lg btn-light" asp-controller="Photographs" asp-action="Create">Upload</a>
+
+        </div>
+    </div>
+    
+}

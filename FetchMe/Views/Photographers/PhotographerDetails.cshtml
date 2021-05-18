@@ -1,0 +1,116 @@
+﻿@using FetchMe.Models.AzureConfigurationModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    var baseURL300 = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    var baseURL600 = $"{azureOptions.Value.AzureStorageBaseURL}600";
+    var baseURL1500 = $"{azureOptions.Value.AzureStorageBaseURL}1500";
+
+}
+
+<script id="photographer-details" type="text/template">
+
+    <div class="tab-content h-100 overflow-auto">
+
+        {{#bannerImageVM.imageUrl}}
+        <div class="d-flex flex-column" style="background-image:url(@baseURL1500/{{bannerImageVM.imageUrl}}); background-repeat: no-repeat; height:60vh; background-size: cover; background-position: center;">
+            {{/bannerImageVM.imageUrl}}
+
+            <div class="d-flex flex-grow-1"></div>
+
+            <div class="d-flex flex-column p-2 m-0 w-100 align-self-end">
+
+                <div class="d-flex justify-content-center mb-2">
+                    <h1>{{displayName}}</h1>
+                </div>
+
+                <div class="d-flex flex-row">
+                    {{#logoImage.imageUrl}}
+                    <div class="logo-img-profile align-self-center pr-3">
+                        <img class="rounded border" style="width:100px; height:100px; object-fit: cover;" src="@baseURL300/{{logoImage.imageUrl}}" />
+                    </div>
+                    {{/logoImage.imageUrl}}
+
+                    <div class="d-flex flex-column flex-grow-1">
+                        {{#phoneNumber}}
+                        <a class="photographer-link mt-2" href="tel:{{phoneNumber}}">
+                            <i class="fa fa-2x fa-phone mr-3" aria-hidden="true"></i><i class="h4">{{phoneNumber}}</i>
+                        </a>
+                        {{/phoneNumber}}
+
+                        <div id="photographers-links" class="mt-2 align-content-around">
+                            {{#webSite}}
+                            <a class="photographer-link pr-2" href="{{webSite}}" target="_blank">
+                                <i class="fa fa-2x fa-globe" aria-hidden="true"></i>
+                            </a>
+                            {{/webSite}}
+
+                            {{#twitter}}
+                            <a class="photographer-link pr-2" href="{{twitter}}" target="_blank">
+                                <i class="fa fa-2x fa-twitter" aria-hidden="true"></i>
+                            </a>
+                            {{/twitter}}
+
+                            {{#facebook}}
+                            <a class="photographer-link pr-2" href="{{facebook}}" target="_blank">
+                                <i class="fa fa-2x fa-facebook" aria-hidden="true"></i>
+                            </a>
+                            {{/facebook}}
+
+                            {{#instagram}}
+                            <a class="photographer-link pr-2" href="{{instagram}}" target="_blank">
+                                <i class="fa fa-2x fa-instagram" aria-hidden="true"></i>
+                            </a>
+                            {{/instagram}}
+
+                            {{#pinterest}}
+                            <a class="photographer-link pr-2" href="{{pinterest}}" target="_blank">
+                                <i class="fa fa-2x fa-pinterest-p" aria-hidden="true"></i>
+                            </a>
+                            {{/pinterest}}
+
+                            {{#tumblr}}
+                            <a class="photographer-link" href="{{tumblr}}" target="_blank">
+                                <i class="fa fa-2x fa-tumblr" aria-hidden="true"></i>
+                            </a>
+                            {{/tumblr}}
+                        </div>
+
+                        <div id="photographers-badges" class="mt-2 align-content-around">
+                            {{#photographerBadges}}
+                            <span class="badge {{badgeClass}}" data-toggle="tooltip" title="{{title}} - {{description}}"><i class="fa fa-2x {{graphic}}" aria-hidden="true"></i></span>
+                            {{/photographerBadges}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {{#bannerImageVM.imageUrl}}
+        </div>
+        {{/bannerImageVM.imageUrl}}
+
+        <div id="{{slug}}-images-grid" class="tab-pane default-tab w-100 fade show active h-100">
+
+            <div class="d-flex flex-row bg-gradient-nav border-top border-bottom box-shaddow-bottom p-2">
+                <h3 class="flex-fill text-center">Photographs</h3>
+                <button type="submit" class="btn btn-light" data-toggle="modal" data-target="#{{slug}}-images-search-modal" aria-expanded="false" aria-controls="{{slug}}-images-search-modal">
+                    <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                    <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="" id="{{slug}}-images"></div>
+        </div>
+
+        <div id="{{slug}}-profile" class="tab-pane w-100 fade h-100" style="min-height:40vh;">
+            <div class="d-flex flex-row bg-gradient-nav border-top border-bottom box-shaddow-bottom p-2">
+                <h3 class="flex-fill text-center">Profile</h3>
+            </div>
+            <div class="p-2">{{profileBio}}</div>
+        </div>
+
+    </div>
+
+</script>

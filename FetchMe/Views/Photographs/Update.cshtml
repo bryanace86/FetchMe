@@ -1,0 +1,202 @@
+﻿@model FetchMe.Models.PhotographModels.PhotographUpdateDto
+@{
+    ViewData["Title"] = "Update Phototograph";
+}
+
+<div class="container my-3">
+    <form action="/Photographs/UpdateAsync" method="post" id="createPost">
+        @Html.AntiForgeryToken()
+        <div class="card">
+            <div class="card-header">
+                <div class="h3">
+                    Edit : @Model.ImageTitle
+                </div>
+            </div>
+            <div class="card-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input hidden="hidden" asp-for="Id" class="form-control" />
+
+                <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Details</h4></div></div>
+
+                <div class="form-group mt-3">
+                    <label>@Html.DisplayNameFor(m => m.ImageTitle)</label>
+                    <input asp-for="ImageTitle" class="form-control" placeholder="@Html.DisplayNameFor(m => m.ImageTitle)" />
+                    <span asp-validation-for="ImageTitle" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.ImageDescription)</label>
+                    <input asp-for="ImageDescription" class="form-control" placeholder="@Html.DisplayNameFor(m => m.ImageDescription)" />
+                    <span asp-validation-for="ImageDescription" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(m => m.PhotographTagIds)</label>
+                    <span>Separate each tag with a comma (,)</span>
+                    <Select hidden="hidden" asp-for="PhotographTagIds" class="form-control js-tags" multiple="multiple" data-placeholder="@Html.DisplayNameFor(m => m.PhotographTagIds)" data-get-data="GetPhotographTags">
+                        @foreach (var tag in Model.PhotographTags)
+                        {
+                            <option id="@tag.PhotographTagId" value="@tag.PhotographTagId" selected>@tag.PhotographTagId</option>
+                        }
+                    </Select>
+                    <span asp-validation-for="PhotographTagIds" class="text-danger"></span>
+                </div>
+
+                <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Settings</h4></div></div>
+                <div class="d-flex flex-row flex-wrap">
+
+                    <div class="form-group col-6 pr-1 pl-0">
+                        <label>@Html.DisplayNameFor(m => m.FStopValue)</label>
+                        <Select asp-for="FStopValue" class="form-control js-tags" data-placeholder="@Html.DisplayNameFor(m => m.FStopValue)" data-get-data="GetFStopTags">
+                            <option></option>
+                            @if (Model.FStopValue != null)
+                            {
+                                <option id="@Model.FStopValue" selected>@Model.FStopValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="FStopValue" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-6 pl-1 pr-0">
+                        <label>@Html.DisplayNameFor(m => m.ExposureTimeValue)</label>
+                        <Select asp-for="ExposureTimeValue" class="form-control js-tags" asp-items="ViewBag.ExposureTime" data-placeholder="@Html.DisplayNameFor(m => m.ExposureTimeValue)" data-get-data="GetExposureTimeTags">
+                            <option></option>
+                            @if (Model.ExposureTimeValue != null)
+                            {
+                                <option id="@Model.ExposureTimeValue">@Model.ExposureTimeValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="ExposureTimeValue" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-6 pr-1 pl-0">
+                        <label>@Html.DisplayNameFor(m => m.ISOValue)</label>
+                        <Select asp-for="ISOValue" class="form-control js-tags" asp-items="ViewBag.ISO" data-placeholder="@Html.DisplayNameFor(m => m.ISOValue)" data-get-data="GetISOTags">
+                            <option></option>
+                            @if (Model.ISOValue != null)
+                            {
+                                <option id="@Model.ISOValue">@Model.ISOValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="ISOValue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-6 pl-1 pr-0">
+                        <label>@Html.DisplayNameFor(m => m.FocalLengthValue)</label>
+                        <Select asp-for="FocalLengthValue" class="form-control js-tags" asp-items="ViewBag.FocalLength" data-placeholder="@Html.DisplayNameFor(m => m.FocalLengthValue)" data-get-data="GetFocalLengthTags">
+                            <option></option>
+                            @if (Model.FocalLengthValue != null)
+                            {
+                                <option id="@Model.FocalLengthValue">@Model.FocalLengthValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="FocalLengthValue" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Gear</h4></div></div>
+                <div class="d-flex flex-row flex-wrap">
+                    <div class="form-group col-6 pr-1 pl-0">
+                        <label>@Html.DisplayNameFor(m => m.CameraBodyValue)</label>
+                        <Select asp-for="CameraBodyValue" class="form-control js-tags" asp-items="ViewBag.CameraBody" data-placeholder="@Html.DisplayNameFor(m => m.CameraBodyValue)" data-get-data="GetCameraBodyTags">
+                            <option></option>
+                            @if (Model.CameraBodyValue != null)
+                            {
+                                <option id="@Model.CameraBodyValue">@Model.CameraBodyValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="CameraBodyValue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-6 pl-1 pr-0">
+                        <label>@Html.DisplayNameFor(m => m.LensValue)</label>
+                        <Select asp-for="LensValue" class="form-control js-tags" asp-items="ViewBag.Lens" data-placeholder="@Html.DisplayNameFor(m => m.LensValue)" data-get-data="GetLensTags">
+                            <option></option>
+                            @if (Model.LensValue != null)
+                            {
+                                <option id="@Model.LensValue">@Model.LensValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="LensValue" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-12 pr-0 pl-0">
+                        <label>@Html.DisplayNameFor(m => m.LightSourceValue)</label>
+                        <Select asp-for="LightSourceValue" class="form-control js-tags" asp-items="ViewBag.LightSource" data-placeholder="@Html.DisplayNameFor(m => m.LightSourceValue)" data-get-data="GetLightSourceTags">
+                            <option></option>
+                            @if (Model.LightSourceValue != null)
+                            {
+                                <option id="@Model.LightSourceValue">@Model.LightSourceValue</option>
+                            }
+                        </Select>
+                        <span asp-validation-for="LightSourceValue" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Location</h4></div></div>
+                <div id="locationField" class="form-group">
+                    <input asp-for="Location.FormattedAddress" id="autocomplete" class="form-control location-field location-autocomplete" type="text" placeholder="@Html.DisplayNameFor(m => m.Location)" />
+                    <input hidden="hidden" asp-for="Location.Id" class="form-control location-field location_id" />
+                    <input hidden="hidden" asp-for="Location.AdministrativeAreaLevel1" class="form-control location-field administrative_area_level_1" />
+                    <input hidden="hidden" asp-for="Location.AdministrativeAreaLevel2" class="form-control location-field administrative_area_level_2" />
+                    <input hidden="hidden" asp-for="Location.AdministrativeAreaLevel3" class="form-control location-field administrative_area_level_3" />
+                    <input hidden="hidden" asp-for="Location.Country" class="form-control location-field country" />
+                    <input hidden="hidden" asp-for="Location.Locality" class="form-control location-field locality" />
+                    <input hidden="hidden" asp-for="Location.Neighborhood" class="form-control location-field neighborhood" />
+                    <input hidden="hidden" asp-for="Location.Political" class="form-control location-field political" />
+                    <input hidden="hidden" asp-for="Location.PostalCode" class="form-control location-field postal_code" />
+                    <input hidden="hidden" asp-for="Location.Route" class="form-control location-field route" />
+                    <input hidden="hidden" asp-for="Location.StreetNumber" class="form-control location-field street_number" />
+                    <input hidden="hidden" asp-for="Location.Lat" class="form-control location-field lat" value="" />
+                    <input hidden="hidden" asp-for="Location.Lng" class="form-control location-field lng" value="" />
+                    <span asp-validation-for="Location.FormattedAddress" class="text-danger"></span>
+
+
+                </div>
+
+                <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Display Options</h4></div></div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck" asp-for="IsBannerImage" asp-items="ViewBag.PhotographerBannerImage">
+                    <label class="custom-control-label" for="customCheck">Set as banner image.</label>
+                    <span asp-validation-for="IsBannerImage" class="text-danger"></span>
+                </div>
+
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2" asp-for="IsLogoImage" asp-items="ViewBag.PhotographerLogoImage">
+                    <label class="custom-control-label" for="customCheck2">Set as logo image.</label>
+                    <span asp-validation-for="IsLogoImage" class="text-danger"></span>
+                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="HideFromGalleryCheckBox" asp-for="HideFromGallery">
+                        <label class="custom-control-label" for="HideFromGalleryCheckBox">Hiden Image.</label>
+                        <span asp-validation-for="HideFromGallery" class="text-danger"></span>
+                    </div>
+                }
+
+
+            </div>
+            <div class="card-footer">
+                <div class="d-flex flex-row justify-content-end">
+                    <button type="submit" value="Create" class="btn btn-outline-primary">Save</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+@section Scripts {
+    @*{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script type="text/javascript" src="~/js/custom/ExifJs/Exif.js"></script>
+    <script type="text/javascript" src="~/js/custom/ExifJs/ConvertLatLon.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            setGridSearchFormMapsAutocomplete($("#createPost"));
+
+        });
+    </script>
+
+}

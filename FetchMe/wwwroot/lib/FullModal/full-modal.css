@@ -1,0 +1,25 @@
+﻿.full-modal-dialog {
+    margin: 0;
+    height: 100%;
+    max-width: 100%;
+}
+
+    .full-modal-dialog > .modal-content > .modal-body {
+        padding: 0 !important;
+        overflow: auto !important;
+    }
+
+.spin {
+    opacity: .2;
+    transform: translateX(0) rotate(0deg);
+    transition: all .25s ease;
+}
+
+    .spin.right {
+        transform: translateX(0) rotate(360deg);
+        opacity: 1;
+    }
+    .spin.left {
+        transform: translateX(0) rotate(-360deg);
+        opacity: 1;
+    }

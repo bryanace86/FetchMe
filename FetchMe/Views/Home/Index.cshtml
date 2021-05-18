@@ -1,0 +1,272 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model FetchMe.Models.HomeViewModels.HomeIndexVM
+@{
+    ViewData["Title"] = "FetchMe Photography";
+    ViewData["ContentContainer"] = "p-0";
+}
+
+<div class="" style="background:linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(/images/SiteImages/background-blur-bokeh-bright-1920-1080.jpg) no-repeat center center;background-size:cover;">
+    <div class="container pt-5 flex-grow-1">
+        <div class="d-flex justify-content-center border-light border-bottom mb-3">
+            <h1 class="text-center">
+                Are you a photographer seeking new clients?
+            </h1>
+        </div>
+        <a class="btn btn-lg btn-light w-100" asp-controller="Photographers" asp-action="Create">Become a Photographer!</a>
+    </div>
+
+    <div class="d-flex flex-row">
+        <div id="home-photographs" class="grid-horizontal d-flex flex-row">
+        </div>
+        <div id="home-photographs-loader" class="aligner-item">
+            <i class="fas fa-spinner fa-spin fa-5x d-none"></i>
+        </div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 319"><path class="w-100" fill="#272b30" fill-opacity="1" d="M0,128L480,128L960,256L1440,32L1440,320L960,320L480,320L0,320Z"></path></svg>
+</div>
+
+<div class="bg-secondary">
+    <div class="container pb-0">
+        <div class="d-flex flex-column text-center">
+            <i class="fas fa-hand-paper fa-5x fa-wiggle" aria-hidden="true"></i>
+            <h1 class="text-center">Welcome Our Newest Photographers.</h1>
+            <hr />
+        </div>
+    </div>
+    <div class="bg-secondary">
+        <div id="photographer-results" class="d-flex flex-row flex-nowrap grid-horizontal bg-secondary photographers-horizontal">
+            @await Html.PartialAsync("~/Views/Photographers/IndexItemLoop.cshtml", Model.Photographers)
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="bg-black" style="background:linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(/images/SiteImages/adult-blur-camera-dirt-road-1920-1080.jpg) no-repeat center center;background-size:cover;">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 319"><path fill="#272b30" fill-opacity="1" d="M0,128L480,128L960,224L1440,96L1440,0L960,0L480,0L0,0Z"></path></svg>
+    <div class="container p-5">
+        <div class="d-flex flex-column pt-3 pb-5">
+
+            <div class="d-flex flex-column text-center my-3">
+                <i class="fa fa-5x fa-binoculars" aria-hidden="true"></i>
+                <h1 class="text-center">Discover new photographers today.</h1>
+                <hr />
+            </div>
+            <form id="home-photographer-search" asp-controller="Photographers" asp-action="Index" method="get">
+                <div class="row">
+                    <div class="col-xs-12 col-md-5 mb-2 mb-md-0">
+                        <select hidden="hidden" name="PhotographTagIds" class="form-control js-tags PhotographTagIds" placeholder="Photographer Type" data-placeholder="Photographer Type" data-get-data="GetPhotographTags" multiple="multiple" style="width:100%; height:100%;">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-xs-12 col-md-5 mb-2 mb-md-0">
+                        <div class="locationFields flex-grow-1">
+                            <input id="home-photographer-location-search" name="Location.FormattedAddress" class="form-control location-field location-autocomplete" placeholder="Location" type="text" value="" />
+                            <input hidden="hidden" name="Location.Lat" class="form-control location-field lat" />
+                            <input hidden="hidden" name="Location.Lng" class="form-control location-field lng" />
+                        </div>
+                        <input hidden="hidden" name="Distance" value="25" />
+                    </div>
+                    <div class="col-xs-12 col-md-2 mb-2 mb-md-0">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 319"><path fill="#e9ecef" fill-opacity="1" d="M0,128L480,128L960,320L1440,256L1440,320L960,320L480,320L0,320Z"></path></svg>
+</div>
+
+<div class="bg-light text-dark">
+
+    <div class="container pb-3">
+        <div class="d-flex justify-content-center">
+            <i class="fa fa-5x fa-handshake-o" aria-hidden="true"></i>
+        </div>
+        <div class="d-flex justify-content-center border-dark border-bottom">
+            <h1 class="text-dark">Who are we?</h1>
+        </div>
+    </div>
+
+</div>
+<div class="bg-light text-dark">
+
+    <div class="container-fluid pb-4">
+        <div class="card text-white bg-dark box-shadow">
+            <div class="card-header"><h3 class="text-center">Mission</h3></div>
+            <div class="card-body bg-secondary rounded-bottom">
+                <h1 class="card-text text-center">To connect photographers with people searching for their talent.</h1>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="bg-light text-dark">
+    <div class="container pb-3">
+        <div class="d-flex justify-content-center border-dark border-bottom mb-3">
+            <h2 class="text-dark">Here's how we do it.</h2>
+        </div>
+        <div class="card-deck">
+            <div class="card text-white bg-dark box-shadow">
+                <div class="card-header text-center">
+                    <i class="fa fa-5x fa-th-list" aria-hidden="true"></i>
+                    <h3 class="text-center">Directory</h3>
+                </div>
+                <div class="card-body bg-secondary rounded-bottom">
+                    <p class="card-text">Our directory has an advanced search which helps you to find the photographers and photographs you want.</p>
+                    <p class="card-text">You can search by location, experience and even camera settings used.</p>
+                </div>
+            </div>
+            <div class="card text-white bg-dark box-shadow">
+                <div class="card-header text-center">
+                    <i class="fa fa-5x fa-heart" aria-hidden="true"></i>
+                    <h3 class="text-center">Favorites</h3>
+                </div>
+                <div class="card-body bg-secondary rounded-bottom">
+                    <p class="card-text">After you search you can add photographers and photographs to your favorites.</p>
+                    <p class="card-text">This can help you to discover which photographers are best for your needs.</p>
+                </div>
+            </div>
+            <div class="card text-white bg-dark box-shadow">
+                <div class="card-header text-center">
+                    <i class="fa fa-5x fa-envelope" aria-hidden="true"></i>
+                    <h3 class="text-center">Contact</h3>
+                </div>
+                <div class="card-body bg-secondary rounded-bottom">
+                    <p class="card-text">Our goal is to make it as easy as posible to connect with the photographer you desire.</p>
+                    <p class="card-text">Go to a photographers profile to see all the ways that you can contact them.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-black">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 319"><path fill="#e9ecef" fill-opacity="1" d="M0,128L480,128L960,256L1440,32L1440,0L960,0L480,0L0,0Z"></path></svg>
+    <div class="container pt-3 pb-5">
+
+        <div class="d-flex flex-column box-shadow">
+            <div class="d-flex justify-content-center">
+                <i class="fa fa-5x fa-cogs" aria-hidden="true"></i>
+            </div>
+            <div class="d-flex justify-content-center border-bottom mb-3">
+                <h1>Coming Soon!</h1>
+            </div>
+            <h3 class="mb-3">Here is a glimpse of what we are working on next.</h3>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row align-items-stretch">
+            <div class="card-deck">
+                <div class="card bg-light text-dark h-100 box-shadow">
+                    <div class="card-header bg-light text-dark">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-center">
+                                <i class="fa fa-5x fa-calendar" aria-hidden="true"></i>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <h2 class="text-dark">Availablity</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body bg-secondary text-light align-self-stretch rounded-bottom">
+                        <p>FetchMe does not want to waste your time. This is why we are going to include a photographers availability.</p>
+                        <p>Have a specific date or time that you need services provided? Soon you will be able to search by date and time ranges to find all the photographers that are available.</p>
+                    </div>
+                </div>
+                <div class="card bg-light text-dark box-shadow">
+                    <div class="card-header bg-light text-dark">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-center">
+                                <i class="fa fa-5x fa-map-pin" aria-hidden="true"></i>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <h2 class="text-dark">Gigs</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body bg-secondary text-light rounded-bottom">
+                        <p>FetchMe wants to give you the ability to let photographers know that you are actively searching.</p>
+                        <p>Soon you will be able to post a gig and photographers will compete to be selected as your photographer.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="photographer-message-modal" class="modal fade"></div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(document).ready(function () {
+            setGridSearchFormMapsAutocomplete($("#home-photographer-search"));
+
+            //Set up image grids
+            var data = @Html.Raw(Json.Serialize(Model.Photographers));
+
+            $.each(data, function (i, val) {
+
+                var search = {
+                    //distance: $('#distance').val(),
+                    photographerSlug: val.slug,
+                    //photographTagIds: formData.PhotographTagIds
+                };
+
+                $("#" + val.slug + "-image-grid").FetchMeGallery({
+                    scrollDirection: "horizontal",
+                    hasModal: true,
+                    modal: {
+                        templateId: "#photograph-index-modal",
+                        modalItemTemplateId: "#photograph-index-modal-item"
+                    },
+                    itemLoading: {
+                        method: 'POST',
+                        url: '/Photographs/PhotographSearch',
+                        templateId: '#photograph-index-item'
+                    },
+                    search: search,
+                    hasData: true,
+                    data: data[i].photographs
+
+                });
+
+            });
+
+            var photographs = @Html.Raw(Json.Serialize(Model.Photographs));
+            $("#home-photographs").FetchMeGallery({
+                scrollDirection: 'horizontal',
+                hasModal: true,
+                modal: {
+                    templateId: "#photograph-index-modal",
+                    modalItemTemplateId: "#photograph-index-modal-item"
+                },
+                search: {
+                    pagingType: "dateRange"
+                },
+                itemLoading: {
+                    method: 'POST',
+                    url: '/Photographs/PhotographSearch',
+                    templateId: '#photograph-index-item'
+                },
+                hasData: true,
+                data: photographs
+            });
+
+        });
+    </script>
+
+}
+
+

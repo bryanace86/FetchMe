@@ -1,0 +1,239 @@
+﻿@model FetchMe.Models.PhotographerModels.PhotographerDetailsDto
+@using FetchMe.Models.AzureConfigurationModels;
+@using FetchMe.Models.PhotographModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    var baseURL300 = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    var baseURL600 = $"{azureOptions.Value.AzureStorageBaseURL}600";
+    var baseURL1500 = $"{azureOptions.Value.AzureStorageBaseURL}1500";
+
+}
+
+
+@{
+    ViewData["Title"] = "Photographer";
+
+}
+
+<style>
+    .fa-link-wrapper:hover {
+        text-decoration: none;
+    }
+
+    .bg-gradient-bottom-top-100-75 {
+        background: linear-gradient(0deg, rgba(0,0,0,.90) 0%, rgba(0,0,0,0.33) 100%);
+    }
+</style>
+@section PageSearch{
+    <div class="d-flex flex-grow-1 justify-content-end">
+        @Html.Partial("~/Views/Photographers/EditPhotographerButton.cshtml", Model)
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a class="btn btn-sm btn-primary m-0 text-danger likable" data-like-id="@Model.Id" data-type="Photographer">
+            @if (Model.IsLiked)
+            {
+                <i class="fas fa-heart fa-2x fa-fw align-self-center"></i>
+            }
+            else
+            {
+                <i class="far fa-heart fa-2x fa-fw align-self-center"></i>
+            }
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-sm btn-primary m-0 text-danger">
+            <i class="far fa-heart fa-2x fa-fw align-self-center" data-toggle="tooltip" data-placement="left" title="Log in to show some love." data-original-title="Log in to show some love."></i>
+        </a>
+    }
+
+}
+
+<div id="photographer">
+
+    <div class="tab-content">
+        @{ var bannerStyle = "";}
+        @if (Model.BannerImage != null)
+        {
+            bannerStyle = $"background-image:url({baseURL1500}/{Model.BannerImage.ImageUrl}); background-repeat: no-repeat; height:60vh; background-size: cover; background-position: center;";
+        }
+
+        <div class="d-flex flex-column" style="@bannerStyle">
+
+            <div class="d-flex flex-grow-1"></div>
+
+            <div class="d-flex flex-column bg-gradient-bottom-top-100-75 border-top p-2 m-0 w-100 align-self-end">
+
+                <div class="d-flex justify-content-center mb-2">
+                    <h1>@Model.DisplayName</h1>
+                </div>
+
+                <div class="d-flex flex-row pl-2">
+                    @if (Model.LogoImage != null)
+                    {
+                        <div class="logo-img-profile align-self-center pr-3">
+                            <img class="rounded border" style="width:100px; height:100px; object-fit: cover;" src="@baseURL300/@Model.LogoImage.ImageUrl" />
+                        </div>
+                    }
+
+                    <div class="d-flex flex-column flex-grow-1">
+                        @if (!String.IsNullOrWhiteSpace(Model.PhoneNumber))
+                        {
+                            <a class="mt-2" href="tel:@Model.PhoneNumber">
+                                <i class="fas fa-phone-square-alt fa-2x mr-3" aria-hidden="true"></i><i class="h4">@Model.PhoneNumber</i>
+                            </a>
+                        }
+
+                        <div id="photographers-links" class="mt-2 align-content-around">
+                            @if (!String.IsNullOrWhiteSpace(Model.WebSite))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.WebSite" target="_blank">
+                                    <i class="fas fa-globe fa-2x" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            @if (!String.IsNullOrWhiteSpace(Model.Twitter))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.Twitter}}" target="_blank">
+                                    <i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            @if (!String.IsNullOrWhiteSpace(Model.Facebook))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.Facebook" target="_blank">
+                                    <i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            @if (!String.IsNullOrWhiteSpace(Model.Instagram))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.Instagram" target="_blank">
+                                    <i class="fab fa-instagram-square fa-2x" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            @if (!String.IsNullOrWhiteSpace(Model.Pinterest))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.Pinterest" target="_blank">
+                                    <i class="fab fa-2x fa-pinterest-square" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            @if (!String.IsNullOrWhiteSpace(Model.Tumblr))
+                            {
+                                <a class="fa-link-wrapper pr-2" href="@Model.Tumblr" target="_blank">
+                                    <i class="fab fa-2x fa-tumblr-square" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                        </div>
+
+                        <div id="photographers-badges" class="mt-2 align-content-around">
+                            @foreach (var badge in Model.PhotographerBadges)
+                            {
+                                <span class="badge @badge.Badge.BadgeClass" data-toggle="tooltip" title="@badge.Badge.Title - @badge.Badge.Description"><i class="fa fa-2x @badge.Badge.Graphic" aria-hidden="true"></i></span>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @await Html.PartialAsync("~/Views/Photographers/PhotographerDetailsFooterMenu.cshtml")
+
+        <div id="@Model.Slug-images-grid" class="tab-pane default-tab w-100 fade show active h-100">
+            <div class="d-flex flex-row bg-gradient-nav border-top border-bottom box-shaddow-bottom p-2">
+                <div class="flex-fill"></div>
+                @if (Model.IsOwner)
+                {
+                    <a asp-controller="Photographs" asp-action="Create" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus fa-2x fa-fw" aria-hidden="true"></i>
+                    </a>
+                }
+
+                <button type="submit" class="btn btn-sm btn-primary mx-2" data-toggle="modal" data-target="#@Model.Slug-images-search-modal" aria-expanded="false" aria-controls="@Model.Slug-images-search-modal">
+                    <i class="fas fa-search fa-2x fa-fw" data-icon="search" aria-hidden="true"></i>
+                    <i class="fas fa-refresh fa-spin fa-2x fa-fw d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="pb-2" id="@Model.Slug-images">
+            </div>
+            <div id="@Model.Slug-images-loader" class="d-flex justify-content-center pb-4">
+                <i class="fas fa-spinner fa-spin fa-5x d-none"></i>
+            </div>
+            @if (Model.Photographs.Count == 0 && Model.IsOwner)
+            {
+                await Html.RenderPartialAsync("~/Views/Photographs/NoResultUploadPrompt.cshtml");
+            }
+        </div>
+
+        <div id="@Model.Slug-gallaries" class="tab-pane default-tab w-100 fade h-100">
+            @await Html.PartialAsync("~/Views/Galleries/GalleryIndex.cshtml", Model.GalleryIndex.Galleries)
+        </div>
+
+        <div id="@Model.Slug-profile" class="tab-pane w-100 fade h-100">
+            <div class="p-2">@Model.ProfileBio</div>
+        </div>
+
+    </div>
+
+
+</div>
+
+@*
+    @section PageFooter{
+
+        @await Html.PartialAsync("~/Views/Photographers/PhotographerDetailsFooterMenu.cshtml")
+
+    }
+*@
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+            //add photographs
+            var photographs = @Html.Raw(Json.Serialize(Model.Photographs));
+            var photographGridId = "#@Model.Slug-images";
+            var formData = @Html.Raw(Json.Serialize(Model.PhotographSearch));
+            var photographerSlug = "@Model.Slug";
+
+            $(photographGridId).FetchMeGallery({
+                gridType: "Justified",
+                hasModal: true,
+                modal: {
+                    templateId: "#photograph-index-modal",
+                    modalItemTemplateId: "#photograph-index-modal-item"
+                },
+                hasForm: true,
+                form: {
+                    templateId: "#photograph-index-search",
+                    formData: formData,
+                    //pushToHistory: false,
+                    formContainer: "body"
+                },
+                search: {
+                    pagingType: "dateRange",
+                    photographerSlug: photographerSlug
+                },
+                itemLoading: {
+                    method: 'POST',
+                    url: '/Photographs/PhotographSearch',
+                    templateId: '#photograph-index-item'
+                },
+                hasData: true,
+                data: photographs
+            });
+        });
+
+    </script>
+
+}

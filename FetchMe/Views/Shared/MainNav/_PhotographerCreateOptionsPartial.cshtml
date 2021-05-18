@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link bg-light text-dark border-top border-bottom border-dark" href="" data-toggle="collapse" data-target="#photographer-create-menue-options" aria-expanded="true" aria-controls="photographer-create-menue-options">
+                <i class="fas fa-paint-brush fa-fw pr-2"></i>
+                Photographer Profile
+            </a>
+        </li>
+    </ul>
+
+    <div id="photographer-create-menue-options" class="panel-collapse show">
+        <ul class="nav nav-pills flex-column navbar-dark">
+            @{
+                var claims = User.Claims.ToList();
+                var role = (User.HasClaim(x => x.Type == "Role")) ? @claims.FirstOrDefault(x => x.Type == "Role").Value.ToString() : "Customer";
+
+                if (User.IsInRole("Photographer"))
+                {
+
+                    ViewBag.PhotographerSlug = @claims.FirstOrDefault(x => x.Type == "PhotographerSlug")?.Value?.ToString();
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Photographers/@ViewBag.PhotographerSlug">
+                            <i class="far fa-user fa-fw pr-2" aria-hidden="true"></i>
+                            Profile
+                        </a>
+                    </li>
+                    @*
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Photographs?PhotographerSlug=@ViewBag.PhotographerSlug">
+                            <i class="far fa-images fa-fw pr-2" aria-hidden="true"></i>
+                            Images
+                        </a>
+                    </li>
+                    *@
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="PhotographersLocations" asp-action="Create">
+                            <i class="fas fa-map-marked fa-fw pr-2" aria-hidden="true"></i>
+                            Locations
+                        </a>
+                    </li>
+                    @*
+                <a class="dropdown-item" asp-controller="Availability" asp-action="Index">Availability</a>
+                    *@
+
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Photographers" asp-action="Create">
+                            <i class="fas fa-compass fa-fw pr-2" aria-hidden="true"></i>
+                            Become a Photographer!
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+
+}

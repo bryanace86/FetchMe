@@ -1,0 +1,25 @@
+﻿@using FetchMe.Models.BlogModels
+@model BlogIndexVM
+
+@section PageSearch{
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="d-flex flex-grow-1 justify-content-end">
+            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#blog-create-modal" aria-expanded="false" aria-controls="blog-create-modal">
+                <i class="fa fa-plus" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+            </button>
+        </div>
+    }
+}
+
+@await Html.PartialAsync("~/Views/Blogs/Create.cshtml", new BlogCreateVM())
+
+<div class="container">
+    <div class="row">
+        @foreach (BlogIndexItemVM blog in Model.Blogs)
+        {
+            @await Html.PartialAsync("~/views/Blogs/IndexItem.cshtml", blog)
+        }
+    </div>
+</div>

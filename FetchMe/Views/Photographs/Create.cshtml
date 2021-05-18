@@ -1,0 +1,333 @@
+﻿@model FetchMe.Models.PhotographModels.PhotographCreateDto
+
+@{
+    ViewData["Title"] = "Create";
+}
+<span class="AntiForge"> @Html.AntiForgeryToken() </span>
+<input hidden="hidden" name="ImagesRemaining" value="@ViewData["ImagesRemaining"]" />
+
+<div id="image-upload-container" class="container my-3">
+
+    <div class="custom-file mb-3">
+        <input id="multi-upload" name="multi-upload" type="file" class="custom-file-input" accept="image/*;capture=camera" multiple />
+        <label class="custom-file-label" for="multi-upload">Choose files</label>
+    </div>
+
+    <div class="d-flex flex-column mb-3 rounded bg-gradient-danger text-center text-light">
+        <h5 id="image-upload-max-count-error" class="p-2 w-100 d-none">
+            Whoa! Thats a lot of images. FetchMe is just getting started and our servers can't hadle that many images yet. Help us to upgrade our servers by upgrading your account.
+        </h5>
+        <h5 id="image-upload-count-error" class="p-2 w-100 d-none">
+            Only @ViewData["ImagesRemaining"] image uploads remain on your plan. Not all selected images will be uploaded. Upgrade your account to get unlimited uploads.
+        </h5>
+    </div>
+
+
+
+    <button class="btn btn-light upload-images d-none">Upload All</button>
+    <button class="btn btn-danger remove-images d-none" onclick="clearAllImages()">Clear All</button>
+
+    <div id="image-upload-results" class="accordion my-3"></div>
+    <div id="image-upload-loading"></div>
+    <div id="image-upload-validation-pannel"></div>
+    <div id="image-upload-error-pannel"></div>
+    <div id="image-upload-success-pannel"></div>
+
+    <div id="image-upload-progress-bar" class="d-none"><i class="fas fa-circle-notch fa-2x fa-spin"></i></div>
+
+    <button class="btn btn-light upload-images d-none">Upload All</button>
+    <button class="btn btn-danger remove-images d-none" onclick="clearAllImages()">Clear All</button>
+
+</div>
+@{await Html.RenderPartialAsync("~/Views/Photographs/PhotographUploadItem.cshtml"); }
+
+@section Scripts {
+    <!--Image Exif-->
+    <script type="text/javascript" src="~/js/custom/ExifJs/Exif.js"></script>
+    <script type="text/javascript" src="~/js/custom/ExifJs/ConvertLatLon.js"></script>
+
+    <script>
+
+        function removeImage(element) {
+            $($(element).attr("data-target")).remove();
+        }
+
+        function clearAllImages() {
+            $("#image-upload-container").find("form").each(function () {
+                $(this).remove();
+            });
+        }
+
+        $(document).ready(function () {
+            var imageIndex = 0;
+            const maxUpload = 50;
+
+            $('#multi-upload').change(function (event) {
+                var files = this.files;
+
+                handleFilesSelected(files);
+
+
+            });
+
+
+
+            async function handleFilesSelected(files) {
+                //Check File API support
+                if (window.File && window.FileList && window.FileReader) {
+                    var maxHeigt = 1080;
+                    var maxWidth = Number.MAX_VALUE;
+                    var count = 0;
+
+                    $(".upload-images").removeClass("d-none");
+                    $(".remove-images").removeClass("d-none");
+
+
+                    Array.from(files).forEach(file => {
+                        imageIndex++;
+
+                        if (imageIndex > maxUpload) {
+                            $("#image-upload-max-count-error").removeClass("d-none");
+                        }
+                        else if (imageIndex > $('input[name="ImagesRemaining"]').val() && $('input[name="ImagesRemaining"]').val() != -1) {
+                            $("#image-upload-count-error").removeClass("d-none");
+                        }
+                        else {
+                            $("#image-upload-count-error").addClass("d-none")
+                            file.imageIndex = imageIndex;
+                            $("#image-upload-loading").append('<div id="image-upload-progress-bar-' + file.imageIndex + '" class="d-flex flex-row justify-content-center"><i class="fas fa-circle-notch fa-2x fa-spin"></i></div>');
+
+                            file.exifdata = EXIF.getData(file);
+
+
+                            var picReader = new FileReader();
+                            picReader.addEventListener("load", function (event) {
+
+                                var picFile = event.target;
+                                var imageData = picFile.result;
+                                var img = new Image();
+                                img.src = imageData;
+                                img.onload = function () {
+                                    var width = img.width;
+                                    var height = img.height;
+
+                                    if (img.width > maxWidth || img.height > maxHeigt) {
+
+                                        if (img.width > maxWidth) {
+                                            width = maxWidth;
+                                            var ration = maxWidth / img.width;
+                                            height = Math.round(img.height * ration);
+                                        }
+
+                                        if (img.height > maxHeigt) {
+                                            height = maxHeigt;
+                                            var ration = maxHeigt / img.height;
+                                            width = Math.round(img.width * ration);
+                                        }
+                                    }
+
+                                    var canvas = $("<canvas/>").get(0);
+                                    canvas.width = width;
+                                    canvas.height = height;
+                                    var context = canvas.getContext('2d');
+                                    context.drawImage(img, 0, 0, width, height);
+
+                                    var quality = .92;
+                                    imageData = canvas.toDataURL("image/jpeg", quality);
+
+                                    file.imageDataType = "data:image/jpeg;base64,"
+                                    file.imageData = imageData.replace("data:image/jpeg;base64,", "");
+
+                                    file.exposureTime = "";
+                                    if (file.exifdata.ExposureTime != null && file.exifdata.ExposureTime === undefined) {
+                                        if (file.exifdata.ExposureTime.denominator != null && file.exifdata.ExposureTime.denominator !== 0 && file.exifdata.ExposureTime.denominator != undefined) {
+                                            if (file.exifdata.ExposureTime.denominator == 1) {
+                                                file.exposureTime = file.exifdata.ExposureTime.numerator;
+                                            } else {
+                                                file.exposureTime = '1/' + 1 / (file.exifdata.ExposureTime.numerator / file.exifdata.ExposureTime.denominator);
+                                            }
+                                        }
+                                    }
+
+                                    if (file.exifdata.FocalLength != null && file.exifdata.FocalLength === undefined) {
+                                        if (file.exifdata.FocalLength.denominator != null && file.exifdata.FocalLength.denominator !== 0 && file.exifdata.FocalLength.denominator != undefined) {
+                                            file.focalLength = file.exifdata.FocalLength.numerator / file.exifdata.FocalLength.denominator + "mm";
+                                        }
+                                    }
+
+                                    file.lensMake = EXIF.getTag(file, "LensMake");
+                                    file.lensModel = EXIF.getTag(file, "LensModel");
+                                    if (file.lensMake == undefined && file.lensModel != undefined) {
+                                        file.lens = file.lensModel;
+                                    } else if (file.lensMake != undefined && file.lensModel == undefined) {
+                                        file.lens = file.lensMake;
+                                    } else if (file.lensMake != undefined && file.lensModel != undefined) {
+                                        file.lens = file.lensMake + " - " + file.lensModel;
+                                    }
+
+
+                                    $('#image-upload-progress-bar-' + file.imageIndex).remove();
+
+                                    var html = Mustache.render($("#photograph-upload-item").html(), file);
+                                    $("#image-upload-results").append(html);
+                                    var form = $("#image-form" + file.imageIndex);
+                                    setSelect2();
+                                    setGridSearchFormMapsAutocomplete(form);
+                                    setFormEvents(form);
+
+                                }
+
+                            });
+                            //Read the image
+                            picReader.readAsDataURL(file);
+                        }
+
+
+                    });
+
+
+                } else {
+                    console.log("Your browser does not support File API");
+                }
+            }
+
+            $(".upload-images").click(function (e) {
+                $("#image-upload-container").find("form").each(function (index) {
+                    $(this).submit();
+                });
+            });
+
+            //handel upload click
+
+
+            function setFormEvents(form) {
+                // Remove validation.
+                form.removeData("validator").removeData("unobtrusiveValidation");
+
+                // Add validation again.
+                $.validator.unobtrusive.parse("#" + form.attr("id"));
+
+                form.submit(function (e) {
+                    e.preventDefault();
+                    var validatorSettings = $.data(form[0], 'validator').settings;
+                    validatorSettings.ignore = "";
+                    form.validate();
+                    if (form.valid()) {
+                        //hide and disable buttons
+                        form.find('.form-edit-btn').addClass('d-none');
+                        form.find('.form-delete-btn').addClass('d-none');
+                        form.find('.form-validation-btn').addClass('d-none');
+                        form.find('.form-submit-btn-submit').addClass('d-none');
+                        form.find('.form-submit-btn-submited').removeClass('d-none');
+
+                        //submit form
+                        var data = form.serializeArray()
+                        data.push({ name: 'AntiforgeryFieldname', value: $('input[name="AntiforgeryFieldname"]').val() });
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Photographs/Create',
+                            data: data,
+                            success: function (data) {
+                                //console.log('success');
+
+                                form.find('.panel-collapse').remove();
+                                form.find('.form-edit-btn').remove();
+                                form.find('.form-delete-btn').remove();
+                                form.find('.form-validation-btn').remove();
+                                form.find('.form-submit-btn').remove();
+                                form.find('.form-submit-success').removeClass('d-none');
+                                form.find('.card-body').each(function () { $(this).remove() });
+                                //form.detach().appendTo("#image-upload-success-pannel");
+
+                                //console.log(data);
+                            },
+                            error: function (data) {
+                                //console.log('error');
+                                //show error message
+
+                                //allow user to resubmit
+                                form.find('.server-error-message').removeClass('d-none');
+                                form.find('.form-edit-btn').removeClass('d-none');
+                                form.find('.form-delete-btn').removeClass('d-none');
+                                form.find('.form-validation-btn').removeClass('d-none');
+                                form.find('.form-submit-btn-submit').removeClass('d-none');
+                                form.find('.form-submit-btn-submited').addClass('d-none');
+
+                                //console.log(data);
+                            }
+                        });
+
+                        //on success move to successfull section
+                        //on error move to error section
+                    } else {
+                        form.find('.form-validation-btn').removeClass('d-none');
+                    }
+
+                });
+            }
+
+        });
+
+
+
+
+
+
+
+
+        function geocodeLatLng(lat, lon, form) {
+
+            if (lat !== null && lon !== null) {
+                var latlng = { lat: parseFloat(lat), lng: parseFloat(lon) };
+
+                geocoder = new google.maps.Geocoder;
+
+                geocoder.geocode({
+                    'location': latlng
+                },
+                    function (results, status) {
+                        if (status === 'OK') {
+                            if (results[0]) {
+
+                                setFirstLocation(results);
+
+                            } else {
+                                window.alert('No results found');
+                            }
+                        } else {
+                            window.alert('Geocoder failed due to: ' + status);
+                        }
+                    });
+            }
+
+        }
+
+        function setFirstLocation(results, form) {
+
+            results.some(function (result) {
+
+                var foundTypes = result.types;
+                var validTypes = ["neighborhood", "political"];
+
+
+                if (findOne(foundTypes, validTypes)) {
+
+                    form.val(result.formatted_address).trigger('place_changed');
+
+                    return result;
+                }
+
+            });
+
+        }
+
+    </script>
+
+
+    @*
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        @{await Html.RenderPartialAsync("\\Photographs\\_PhotographUpsertScripts");}
+    *@
+
+}

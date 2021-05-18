@@ -1,0 +1,208 @@
+﻿@using FetchMe.Models.AzureConfigurationModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    var baseURL300 = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    var baseURL600 = $"{azureOptions.Value.AzureStorageBaseURL}600";
+    var baseURL1500 = $"{azureOptions.Value.AzureStorageBaseURL}1500";
+
+}
+
+<script id="photograph-index-modal-item" type="text/template">
+
+    <div id="{{modal.id}}-{{id}}" class="carousel-item d-flex flex-column h-100">
+
+        <div id="image-carousel-content" class="tab-content h-100 overflow-hidden">
+
+            <div id="{{modal.id}}-image" class="tab-pane default-tab h-100 p-2 fade show active">
+                <picture>
+                    <source srcset="@baseURL300/{{imageUrl}}" media="(max-width: 350px)" class="h-100 w-100" style="object-fit:scale-down;" alt="{{imageTitle}}" data-lazy-load-src="@baseURL300/{{imageUrl}}">
+                    <source srcset="@baseURL600/{{imageUrl}}" media="(max-width: 1200px)" class="h-100 w-100" style="object-fit:scale-down;" alt="{{imageTitle}}" data-lazy-load-src="@baseURL600/{{imageUrl}}">
+                    <source srcset="@baseURL1500/{{imageUrl}}" class="h-100 w-100" style="object-fit:scale-down;" alt="{{imageTitle}}" data-lazy-load-src="@baseURL1500/{{imageUrl}}">
+                    <img src="@baseURL300/{{imageUrl}}" class="h-100 w-100" style="object-fit:scale-down;" loading="lazy" draggable="false">
+                </picture>
+            </div>
+
+            <div id="{{modal.id}}-details" class="tab-pane m-0 mh-100 overflow-auto bg-dark h-100 p-2 fade" style="touch-action: pan-y">
+
+                <div class="d-flex-col p-3">
+                    {{#imageTitle}}
+                    <div id="{{modal.id}}-{{id}}-title" class="d-flex border-bottom text-center mb-2">
+                        <h1>{{imageTitle}}</h1>
+                    </div>
+                    {{/imageTitle}}
+
+                    {{#photographersName}}
+                    <div id="{{modal.id}}-{{id}}-photographer" class="d-flex">
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-2x fa-fw" aria-hidden="true">By:</i>
+                            </button>
+                            <span class="align-self-center h5 mb-0"><a href="/Photographers/{{photographersSlug}}" target="_blank">{{photographersName}}</a></span>
+                        </div>
+                    </div>
+                    {{/photographersName}}
+
+                    {{#formattedAddress}}
+                    <div id="{{modal.id}}-{{id}}-location" class="d-flex mb-2">
+                        <button class="btn btn-light mr-2">
+                            <i class="fa fa-2x fa-map-marker fa-fw" aria-hidden="true"></i>
+                        </button>
+                        <span class="align-self-center h6 mb-0">{{formattedAddress}}</span>
+                    </div>
+                    {{/formattedAddress}}
+
+
+                    {{#imageDescription}}
+                    <div id="{{modal.id}}-{{id}}-description" class="d-flex mb-2">
+                        <h4 class="py-2 mr-2 my-0">About:</h4>
+                        <span class="align-self-center h6 mb-0">{{imageDescription}}</span>
+                    </div>
+                    {{/imageDescription}}
+
+                    <h4 class="py-2">Gear:</h4>
+                    <div id="{{modal.id}}-{{id}}-gear" class="d-flex flex-column">
+                        {{#cameraBodyValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-camera fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{cameraBodyValue}}</span>
+                        </div>
+                        {{/cameraBodyValue}}
+                        {{#lensValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-bullseye fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{lensValue}}</span>
+                        </div>
+                        {{/lensValue}}
+                        {{#lightSourceValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-lightbulb fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{lightSourceValue}}</span>
+                        </div>
+                        {{/lightSourceValue}}
+                    </div>
+
+                    <h4 class="py-2">Settings:</h4>
+                    <div id="{{modal.id}}-{{id}}-settings" class="d-flex flex-column">
+                        {{#exposureTimeValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-clock fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{exposureTimeValue}}</span>
+                        </div>
+                        <div class="mr-3 p-2 d-flex flex-column border rounded"><i class="fa fa-clock-o gallery-link align-self-center pb-1" aria-hidden="true"></i><div>{{exposureTimeValue}}s</div></div>
+                        {{/exposureTimeValue}}
+                        {{#fStopValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light pt-0 pb-1 mr-2">
+                                <i class="fa-2x pl-1"> f /</i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{fStopValue}}</span>
+                        </div>
+                        {{/fStopValue}}
+                        {{#focalLengthValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-dot-circle fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{focalLengthValue}}</span>
+                        </div>
+                        {{/focalLengthValue}}
+                        {{#isoValue}}
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-light mr-2">
+                                <i class="fa fa-film fa-2x fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <span class="align-self-center h5 mb-0">{{isoValue}}</span>
+                        </div>
+                        {{/isoValue}}
+
+                    </div>
+
+                    <h4 class="py-2">Tags:</h4>
+                    <div id="{{modal.id}}-{{id}}-tags" class="d-flex">
+                        {{#photographTagIds}}
+                        <button class="btn btn-lg btn-light mr-2" disabled>{{.}}</button>
+                        {{/photographTagIds}}
+                    </div>
+                </div>
+
+            </div>
+        
+        </div>
+
+
+        <div id="{{modal.id}}-footer" class="modal-footer nav nav-tabs">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <text>
+                    <div class="d-flex flex-grow-1">
+                        <!--If image is the users image-->
+                        {{#isOwner}}
+                        <a href="/Photographs/Update/{{id}}">
+                            <i class="gallery-link fa fa-2x fa-edit" href="/Photographs/Update/{{id}}"></i>
+                        </a>
+                        <a href="/Photographs/Delete/{{id}}">
+                            <i class="gallery-link fa fa-2x fa-minus mx-3" style="" aria-hidden="true"></i>
+                        </a>
+                        {{/isOwner}}
+                    </div>
+                </text>
+            }
+
+            <a class="active" data-toggle="tab" href="#{{modal.id}}-image">
+                <i class="far fa-image fa-2x fa-fw" aria-hidden="false"></i>
+            </a>
+            <a data-toggle="tab" href="#{{modal.id}}-details">
+                <i class="fas fa-info fa-2x fa-fw"></i>
+            </a>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a data-toggle="modal" data-target="#add-image-to-gallery" onclick="openAddToImageGallery(this)" image-id="{{id}}">
+                    <i class="far fa-clone fa-2x fa-fw"></i>
+                </a>
+            }
+            else
+            {
+                <a data-toggle="tooltip" data-placement="left" title="Log in to add images to a gallery." data-original-title="Log in to add images to a gallery.">
+                    <i class="far fa-clone fa-2x fa-fw"></i>
+                </a>
+            }
+
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <text>
+                    {{#isLikedByUser}}
+                    <a class="likable" data-like-id="{{id}}" data-type="Photograph">
+                        <i class="fas fa-heart fa-fw fa-2x text-danger"></i>
+                    </a>
+                    {{/isLikedByUser}}
+                    {{^isLikedByUser}}
+                    <a class="likable" data-like-id="{{id}}" data-type="Photograph">
+                        <i class="far fa-heart fa-fw fa-2x text-danger"></i>
+                    </a>
+                    {{/isLikedByUser}}
+                </text>
+            }
+            else
+            {
+                <text>
+                    <a id="lightbox-like-tooltip" class="" data-toggle="tooltip" data-placement="left" title="Log in to show some love." data-original-title="Log in to show some love.">
+                        <i class="far fa-heart fa-fw fa-2x text-danger"></i>
+                    </a>
+                </text>
+            }
+
+        </div>
+
+    </div>
+
+</script>

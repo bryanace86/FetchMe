@@ -1,0 +1,8 @@
+﻿@model FetchMe.Models.PhotographerModels.PhotographerDetailsDto
+
+@if (Model.IsOwner)
+{
+    <a class="btn btn-sm btn-light mr-2" href="/Photographer/Update/@Model.Slug">
+        <i class="fas fa-user-edit fa-2x fa-fw"></i>
+    </a>
+}

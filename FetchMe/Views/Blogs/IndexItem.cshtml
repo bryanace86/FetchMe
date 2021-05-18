@@ -1,0 +1,16 @@
+﻿@using FetchMe.Models.BlogModels
+@model BlogIndexItemVM
+<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+    <div class="rounded box-shadow">
+        <a href="/Blogs/Details/@Model.Slug">
+            @if (!string.IsNullOrWhiteSpace(@Model.Thumbnail?.ImageUrl))
+            {
+                <img class="rounded-top card-img-top img-cover" height="200" src="@ViewData["baseURL300"]/@Model.Thumbnail.ImageUrl">
+            }
+        <div class="card-body">
+            <h5 class="card-title text-truncate">@Model.Title</h5>
+            <span class="text-truncate">@Model.Description</span>
+        </div>
+        </a>
+    </div>
+</div>

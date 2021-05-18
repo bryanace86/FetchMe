@@ -1,0 +1,18 @@
+﻿@model FetchMe.Models.PostModels.PostVM
+@section PageSearch{
+    <div class="d-flex flex-grow-1 justify-content-end">
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#post-edit-modal" aria-expanded="false" aria-controls="post-edit-modal">
+                <i class="fa fa-edit" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+            </button>
+        }
+    </div>
+}
+@await Html.PartialAsync("~/Views/Posts/Update.cshtml", Model)
+<div class="d-flex flex-column text-center p-3">
+    <h1>@Model.Title</h1>
+    <hr />
+</div>
+@Html.Raw(@Model.Body)

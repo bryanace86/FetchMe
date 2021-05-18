@@ -1,0 +1,9 @@
+﻿@using FetchMe.Models.AzureConfigurationModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    Layout = "_Layout";
+
+    ViewData["baseURL100"] = $"{azureOptions.Value.AzureStorageBaseURL}100";
+    ViewData["baseURL300"] = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    ViewData["baseURL600"] = $"{azureOptions.Value.AzureStorageBaseURL}600";
+}

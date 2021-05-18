@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+    <div class="collapse" id="collapseExample">
+        <div class="h-100 w-100 side-drawer bg-black" style="opacity:.65;" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">empty content</div>
+
+        <div class="h-100 side-drawer bg-dark border-right box-shadow-right">
+
+            <div class="d-flex justify-content-end p-2">
+                <button role="button" type="button" class="btn btn-sm btn-light justify-content-end" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (User.HasClaim(x => x.Type == "UserSlug"))
+                    {
+                    <a class="nav-link" href="/User/@User.Claims.FirstOrDefault(x => x.Type == "UserSlug")?.Value">
+                        <i class="fas fa-home fa-fw pr-2" aria-hidden="true"></i>
+                        Home
+                    </a>
+                    }
+                    else
+                    {
+                    <a class="nav-link" asp-controller="UserProfile" asp-action="UpdateDetails">
+                        <i class="fas fa-home fa-fw pr-2" aria-hidden="true"></i>
+                        Home
+                    </a>
+                    }
+                }
+                else
+                {
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home fa-fw pr-2" aria-hidden="true"></i>
+                        Home
+                    </a>
+                }
+                </li>
+            </ul>
+
+            @await Html.PartialAsync("MainNav/_PhotographerCreateOptionsPartial")
+
+
+            <!--Main Navigation-->
+            @if (SignInManager.IsSignedIn(User))
+        {
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link bg-light text-dark border-top border-bottom border-dark" href="" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                        <i class="fas fa-compass fa-fw pr-2" aria-hidden="true"></i>
+                        <span>Explore</span>
+                    </a>
+                </li>
+            </ul>
+        }
+            <div id="collapse1" class="panel-collapse show">
+                <ul class="nav nav-pills flex-column navbar-dark">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Photographers" asp-action="Index">
+                            <i class="far fa-user fa-fw pr-2" aria-hidden="true"></i>
+                            Photographers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Photographs" asp-action="Index">
+                            <i class="far fa-images fa-fw pr-2" aria-hidden="true"></i>
+                            Photographs
+                        </a>
+                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Blogs" asp-action="Index">
+                                <i class="fas fa-th-list fa-fw pr-2" aria-hidden="true"></i>
+                                Blog
+                            </a>
+                        </li>
+                    }
+
+                    @*
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Membership" asp-action="Join">
+                <i class="fas fa-key fa-fw pr-2" aria-hidden="true"></i>
+                Memberships
+            </a>
+        </li>
+                    *@
+                </ul>
+            </div>
+
+
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
+    </div>

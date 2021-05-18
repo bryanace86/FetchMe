@@ -1,0 +1,192 @@
+﻿@model FetchMe.Models.PhotographerModels.PhotographerUpdateDto
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container-fluid px-0 my-3">
+
+    <div class="d-flex justify-content-center">
+
+        <div class="col-sm-12 col-md-8 col-xl-6">
+            <form action="/Photographers/UpdateAsync" method="post" id="update-photograph">
+                @Html.AntiForgeryToken()
+                <div class="card text-light">
+
+                    <div class="card-header">
+                        <div class="d-flex h1">
+                            Edit Your Profile
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        @Html.HiddenFor(m => m.Id)
+
+                        <div class="d-flex flex-row border-bottom mb-2">
+                            <div>Basic Information</div>
+                        </div>
+
+                        <div class="d-flex flex-row">
+                            <div class="flex-fill mr-2">
+                                <div class="form-group">
+                                    <label asp-for="FirstName"></label>
+                                    <input asp-for="FirstName" placeholder="@Html.DisplayNameFor(m => m.FirstName)" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill ml-2">
+                                <div class="form-group">
+                                    <label asp-for="LastName"></label>
+                                    <input asp-for="LastName" placeholder="@Html.DisplayNameFor(m => m.LastName)" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber"></label>
+
+                            <input asp-for="PhoneNumber" placeholder="@Html.DisplayNameFor(m => m.PhoneNumber)" class="form-control phone" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+
+                            <input asp-for="Email" placeholder="@Html.DisplayNameFor(m => m.Email)" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="YearStarted"></label>
+
+                            <input type="text" asp-for="YearStarted" placeholder="@Html.DisplayNameFor(m => m.YearStarted)"
+                                   class="form-control date"
+                                   id="photographer-since-date"
+                                   data-target="#photographer-since-date" data-toggle="datetimepicker" autocomplete="off" />
+                            <span asp-validation-for="YearStarted" class="text-danger"></span>
+                        </div>
+
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" asp-for="IsInsured">
+                            <label class="custom-control-label" for="customCheck">I am insured.</label>
+                            <span asp-validation-for="IsInsured" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex flex-row border-bottom mb-2">
+                            <div>Social Profiles</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="WebSite"></label>
+
+                            <input asp-for="WebSite" placeholder="@Html.DisplayNameFor(m => m.WebSite)" class="form-control url" />
+                            <span asp-validation-for="WebSite" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Instagram"></label>
+
+                            <input asp-for="Instagram" placeholder="@Html.DisplayNameFor(m => m.Instagram)" class="form-control url" />
+                            <span asp-validation-for="Instagram" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Facebook"></label>
+
+                            <input asp-for="Facebook" placeholder="@Html.DisplayNameFor(m => m.Facebook)" class="form-control url" />
+                            <span asp-validation-for="Facebook" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Pinterest"></label>
+
+                            <input asp-for="Pinterest" placeholder="@Html.DisplayNameFor(m => m.Pinterest)" class="form-control url" />
+                            <span asp-validation-for="Pinterest" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Twitter"></label>
+
+                            <input asp-for="Twitter" placeholder="@Html.DisplayNameFor(m => m.Twitter)" class="form-control url" />
+                            <span asp-validation-for="Twitter" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Tumblr"></label>
+
+                            <input asp-for="Tumblr" placeholder="@Html.DisplayNameFor(m => m.Tumblr)" class="form-control url" />
+                            <span asp-validation-for="Tumblr" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex flex-row border-bottom mb-2">
+                            <div>Profile Information</div>
+                        </div>
+
+                        <div class="form-group has-success">
+                            <label asp-for="Slug"></label>
+                            <p>example: www.fetchme.photography/photographers/{your-slug}</p>
+                            <input asp-for="Slug" placeholder="@Html.DisplayNameFor(m => m.Slug)" class="form-control">
+                            <span asp-validation-for="Slug" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="DisplayName"></label>
+
+                            <input asp-for="DisplayName" placeholder="@Html.DisplayNameFor(m => m.DisplayName)" class="form-control" />
+                            <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CardExcerpt"></label>
+
+                            <input asp-for="CardExcerpt" placeholder="@Html.DisplayNameFor(m => m.CardExcerpt)" class="form-control" />
+                            <span asp-validation-for="CardExcerpt" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ProfileBio"></label>
+                            <textarea asp-for="ProfileBio" placeholder="@Html.DisplayNameFor(m => m.ProfileBio)" class="form-control"></textarea>
+                            <span asp-validation-for="ProfileBio" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="SubscribeToNewsletter" asp-for="SubscribeToNewsletter">
+                            <label class="custom-control-label" for="SubscribeToNewsletter">I want the latest information, please include me in the newsletter!</label>
+                            <span asp-validation-for="SubscribeToNewsletter" class="text-danger"></span>
+                        </div>
+                        
+                    </div>
+
+                    <div class="card-footer">
+
+                        <button type="submit" value="Save" class="btn btn-outline-primary float-right">Save</button>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".phone").mask("000-000-0000");
+        });
+    </script>
+
+    <!--DatePicker-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+    <script src="~/lib/DatePicker/DatePicker.js"></script>
+}

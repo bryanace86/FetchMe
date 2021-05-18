@@ -1,0 +1,16 @@
+﻿@using FetchMe.Models.SupportModels;
+@model FetchMe.Models.SupportModels.SupportTicketResponseDetails
+
+    <div class="response d-flex flex-column p-2 mb-3 rounded border shadow-lg">
+
+        <div class="d-flex flex-row py-2 mb-3 border-bottom">
+            <div>@Model.Response</div>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="flex-grow-1">@Model.CreatedByName</div>
+            <div>@Model.Created</div>
+
+        </div>
+
+    </div>

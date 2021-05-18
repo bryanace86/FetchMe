@@ -1,0 +1,63 @@
+﻿@using FetchMe.Models.PhotographerModels
+@model List<PhotographerIndexViewModel>
+
+@foreach (var photographer in Model)
+{
+
+    <div class="card bg-dark photographer-card mb-3 box-shadow text-wrap">
+        <div class="card-header">
+            <a class="btn btn-lg btn-primary w-100" href="/Photographers/@photographer.Slug">
+                @photographer.DisplayName
+            </a>
+        </div>
+        <div class="card-body bg-black pt-0">
+            <div class="d-flex flex-row">
+                <div id="@photographer.Slug-image-grid" class="photographers-card-images-container grid-horizontal d-flex flex-row">
+                </div>
+                <div id="@photographer.Slug-image-grid-loader" class="aligner-item">
+                    <i class="fas fa-spinner fa-spin fa-5x d-none"></i>
+                </div>
+            </div>
+            
+            <p class="card-text pt-2">@photographer.CardExcerpt</p>
+        </div>
+        <div class="card-footer">
+
+            <div class="d-flex flex-row">
+                <div class="d-flex flex-grow-1">
+                    @*
+                        @foreach (var badge in photographer.PhotographerBadges)
+                        {
+                            <span class="badge @badge.BadgeClass mr-2" data-toggle="tooltip" title="@badge.Title - @badge.Description"><i class="fa fa-2x @badge.Graphic" aria-hidden="true"></i></span>
+                        }
+                    *@
+                </div>
+                <div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-sm btn-primary ml-2 text-danger likable" data-like-id="@photographer.Id" data-type="Photographer">
+                            @if (photographer.IsLiked)
+                            {
+                                <i class="fas fa-heart fa-2x fa-fw"></i>
+
+                            }
+                            else
+                            {
+                                <i class="far fa-heart fa-2x fa-fw"></i>
+
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-primary ml-2 text-danger" data-toggle="tooltip" data-placement="left" title="Log in to show some love." data-original-title="Log in to show some love.">
+                            <i class="far fa-heart fa-2x fa-fw"></i>
+                        </a>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

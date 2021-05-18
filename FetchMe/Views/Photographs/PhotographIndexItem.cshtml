@@ -1,0 +1,19 @@
+﻿@using FetchMe.Models.AzureConfigurationModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    var baseURL100 = $"{azureOptions.Value.AzureStorageBaseURL}100";
+    var baseURL300 = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    var baseURL600 = $"{azureOptions.Value.AzureStorageBaseURL}600";
+}
+<script id="photograph-index-item" type="text/template">
+    <div class="grid-item thumb rounded box-shadow border-0" data-imageid="{{id}}">
+        <img class="rounded" src="@baseURL100/{{imageUrl}}" alt="{{imageTitle}}" loading="lazy" width="{{width}}" height="{{height}}">
+        <div class="caption h-100">
+            <div class="d-flex flex-column h-100 Aligner">
+                <div class="p-2 w-100 aligner-item" data-toggle="modal" data-target="#{{modal.id}}" data-carousel-id="{{id}}">
+                    <span class="fa fa-5x fa-search" aria-hidden="true" data-toggle="modal" data-target="#{{modal.id}}" data-carousel-id="{{id}}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

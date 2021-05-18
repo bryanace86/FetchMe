@@ -1,0 +1,153 @@
+﻿<script id="photograph-index-search" type="text/template">
+    <div id="{{id}}-search-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="{{id}}-search-modal-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content w-100 bg-black text-light modal-form-margin">
+                <div class="modal-header justify-content-end p-2">
+                    <div data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn btn-sm btn-outline-light carousel-close" aria-hidden="true"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div id="{{id}}-search-div" class="modal-body rounded-bottom h-100 overflow-auto">
+
+                    <form id="{{id}}-search" class="d-flex text-light p-2 mb-2 w-100 search-form" method="get" autocomplete="off">
+                        <div class="d-flex flex-column w-100">
+                            <div class="form-group">
+                                <label>Tags</label>
+                                <select hidden="hidden" name="PhotographTagIds" placeholder="Tags" data-placeholder="Tags" data-get-data="GetPhotographTags" multiple="multiple" class="form-control js-tags PhotographTagIds">
+                                    {{#options.form.formData.photographTagId}}
+                                    <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                    {{/options.form.formData.photographTagId}}
+                                </select>
+                            </div>
+
+                            <!--Location-->
+                            <h4>Location</h4>
+                            <div class="d-flex flex-row flex-wrap">
+                                <div class="locationFields form-group flex-grow-1">
+                                    <label for="Location">Location:</label>
+                                    <input id="{{id}}-search-location" name="Location.FormattedAddress" class="form-control location-field location-autocomplete" placeholder="Enter your address" type="text" value="{{options.form.formData.location.formattedAddress}}" />
+                                    <input hidden="hidden" name="Location.Lat" class="form-control location-field lat" value="{{options.form.formData.location.lat}}" />
+                                    <input hidden="hidden" name="Location.Lng" class="form-control location-field lng" value="{{options.form.formData.location.lng}}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="Distance">Distance:</label>
+                                    <select name="Distance" class="form-control Distance">
+                                        <option value="10" {{#options.form.formData.distance10}} selected{{/options.form.formData.distance10}}>Miles</option>
+                                        <option value="10" {{#options.form.formData.distance10}} selected{{/options.form.formData.distance10}}>10</option>
+                                        <option value="25" {{#options.form.formData.distance25}} selected{{/options.form.formData.distance25}}>25</option>
+                                        <option value="50" {{#options.form.formData.distance50}} selected{{/options.form.formData.distance50}}>50</option>
+                                        <option value="100" {{#options.form.formData.distance100}} selected{{/options.form.formData.distance100}}>100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex"><h4>Settings</h4></div>
+                            <div class="d-flex flex-column flex-wrap">
+
+                                <div class="form-group">
+                                    <label>f/</label>
+                                    <select hidden="hidden" name="FStop" data-get-data="GetFStopTags" class="form-control js-tags FStop" data-placeholder="f/" multiple="multiple">
+                                        {{#options.form.formData.fStop}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.fStop}}
+                                    </select>
+                                    <span asp-validation-for="FStop" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>SS</label>
+                                    <select hidden="hidden" name="ExposureTime" data-get-data="GetExposureTimeTags" class="form-control js-tags ExposureTime" data-placeholder="SS" multiple="multiple">
+                                        {{#options.form.formData.exposureTime}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.exposureTime}}
+                                    </select>
+                                    <span asp-validation-for="ExposureTime" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>ISO</label>
+                                    <select hidden="hidden" name="ISO" data-get-data="GetISOTags" class="form-control js-tags ISO" data-placeholder="ISO" multiple="multiple">
+                                        {{#options.form.formData.iSO}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.iSO}}
+                                    </select>
+                                    <span asp-validation-for="ISO" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Focal Length</label>
+                                    <select hidden="hidden" name="FocalLength" data-get-data="GetFocalLengthTags" class="form-control js-tags FocalLength" data-placeholder="Focal Length" multiple="multiple">
+                                        {{#options.form.formData.focalLength}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.focalLength}}
+                                    </select>
+                                    <span asp-validation-for="FocalLength" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="d-flex"><h4>Gear</h4></div>
+                            <div class="d-flex flex-column flex-wrap">
+                                <div class="form-group">
+                                    <label>Camera Body</label>
+                                    <select hidden="hidden" name="CameraBody" data-get-data="GetCameraBodyTags" class="form-control js-tags CameraBody" data-placeholder="Camera Body" multiple="multiple">
+                                        {{#options.form.formData.cameraBody}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.cameraBody}}
+                                    </select>
+                                    <span asp-validation-for="CameraBody" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Lens</label>
+                                    <select hidden="hidden" name="Lens" data-get-data="GetLensTags" class="form-control js-tags Lens" data-placeholder="Lens" multiple="multiple">
+                                        {{#options.form.formData.lens}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.lens}}
+                                    </select>
+                                    <span asp-validation-for="Lens" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Light Source</label>
+                                    <select hidden="hidden" name="LightSource" data-get-data="GetLightSourceTags" class="form-control js-tags LightSource" data-placeholder="Light Source" multiple="multiple">
+                                        {{#options.form.formData.lightSource}}
+                                        <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                        {{/options.form.formData.lightSource}}
+                                    </select>
+                                    <span asp-validation-for="LightSource" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+
+
+                            <!--favorites-->
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input ShowFavorites" id="{{id}}-ShowFavorites" name="ShowFavorites" autocomplete="off" value="true" {{#options.form.formData.showFavorites}} checked{{/options.form.formData.showFavorites}}>
+                                    <label class="custom-control-label" for="{{id}}-ShowFavorites">Only Show My Favorites.</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex mb-4">
+                                    Log in to see your favorite photographs.
+                                </div>
+                            }
+                        </div>
+
+
+                        <input hidden="hidden" class="GalleryId" name="GalleryId" value="{{options.form.formData.galleryId}}" />
+                        <input hidden="hidden" Name="PhotographerSlug" class="PhotographerSlug" value="{{options.search.photographerSlug}}" />
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="{{id}}-search" class="btn btn-light">
+                        <i class="fa fa-search" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                        <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

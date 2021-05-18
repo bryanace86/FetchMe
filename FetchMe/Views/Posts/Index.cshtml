@@ -1,0 +1,11 @@
+﻿@using FetchMe.Models.PostModels
+@model PostIndexVM
+
+<div class="container">
+    <div class="row">
+        @foreach (PostIndexItemVM post in Model.Posts)
+        {
+            @await Html.PartialAsync("~/Views/Posts/IndexItem.cshtml", post)
+        }
+    </div>
+</div>

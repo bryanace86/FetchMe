@@ -1,0 +1,28 @@
+﻿@using FetchMe.Models.BlogModels
+@using FetchMe.Models.PostModels
+@model BlogVM
+
+@section PageSearch{
+    <div class="d-flex flex-grow-1 justify-content-end">
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#post-create-modal" aria-expanded="false" aria-controls="post-create-modal">
+                <i class="fa fa-plus" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#blog-edit-modal" aria-expanded="false" aria-controls="blog-edit-modal">
+                <i class="fa fa-edit" data-icon="search" style="font-size: 1.25em;" aria-hidden="true"></i>
+                <i class="fa fa-refresh fa-spin d-none" data-icon="loading" style="font-size: 1.25em;" aria-hidden="true"></i>
+            </button>
+        }
+    </div>
+}
+@await Html.PartialAsync("~/Views/Posts/Create.cshtml", new PostCreateVM() { BlogId = Model.Id })
+@await Html.PartialAsync("~/Views/Blogs/Update.cshtml", Model)
+<div class="d-flex flex-column text-center p-3">
+    <h1>@Model.Title</h1>
+    <hr />
+    <span>@Model.Description</span>
+</div>
+
+@await Html.PartialAsync("~/Views/Posts/Index.cshtml", Model.PostIndex)

@@ -1,0 +1,213 @@
+﻿@model FetchMe.Models.PhotographModels.PhotographCreateDto
+<script id="photograph-upload-item" type="text/template">
+
+    <form enctype="multipart/form-data" id="image-form{{imageIndex}}">
+        <div class="card">
+            <div class="card-header" id="{{imageIndex}}-heading">
+
+                <div class="d-flex flex-row">
+                    <div>
+                        <img id="{{imageIndex}}-image" height="75" src="{{imageDataType}}{{imageData}}" />
+                    </div>
+
+                    <div class="d-flex flex-fill justify-content-end align-content-center">
+
+                        <button class="btn btn-success align-self-center form-edit-btn ml-2" type="button" data-toggle="collapse" data-target="#imageCollapse{{imageIndex}}">
+                            <i class="far fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger align-self-center form-delete-btn ml-2" type="button" data-target="#image-form{{imageIndex}}" onclick="removeImage(this)">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                        <button class="btn btn-light align-self-center form-submit-btn ml-2" type="submit" form="image-form{{imageIndex}}">
+                            <i class="fas fa-file-upload form-submit-btn-submit"></i>
+                            <i class="fas fa-circle-notch fa-spin form-submit-btn-submited d-none" data-icon="loading" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger align-self-center form-validation-btn ml-2 d-none" type="button" data-toggle="collapse" data-target="#imageCollapse{{imageIndex}}">
+                            <i class="fas fa-exclamation"></i>
+                        </button>
+                        <button class="btn btn-success align-self-center form-submit-success ml-2 d-none" type="button" disabled>
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div id="imageCollapse{{imageIndex}}" class="collapse bg-black" aria-labelledby="{{imageIndex}}-heading" data-parent="#image-upload-results">
+                <div class="card-body">
+
+                    <span class="text-danger field-validation-valid server-error-message d-none">There was an unknown server error, please try to submit your image again.</span>
+
+                    <input hidden="hidden" name="ImageData" id="{{imageIndex}}-imageData" value="{{imageData}}" />
+
+                    <div class="row border-bottom mt-3 mb-2"><div class="col-sm-12"><h4>Details</h4></div></div>
+
+                    <div class="form-group mt-3">
+                        <label>Image Title</label>
+                        <input id="{{imageIndex}}-ImageTitle" name="ImageTitle" value="{{iptcdata.caption}}"
+                               class="form-control ImageTitle" placeholder="Image Title" type="text" data-val="true"
+                               data-val-regex="Special characters should not be entered"
+                               data-val-regex-pattern="^[a-zA-Z0-9_ \-]*$"
+                               data-val-required="The Image Title field is required.">
+                        <span class="text-danger field-validation-valid" data-valmsg-for="ImageTitle" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image Description</label>
+                        <input name="ImageDescription" class="form-control" placeholder="Image Description" value="{{exifdata.ImageDescription}}" />
+                        <span validation-for="ImageDescription" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <span>Seperate each tag with a comma (,)</span>
+                        <select id="{{imageIndex}}-PhotographTagIds" hidden="hidden" name="PhotographTagIds" class="form-control js-tags" data-get-data="GetPhotographTags" multiple="multiple" data-placeholder="Tags">
+                            {{#iptcdata.keywords}}
+                            <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                            {{/iptcdata.keywords}}
+                        </select>
+                        <span validation-for="PhotographTagIds" class="text-danger"></span>
+                    </div>
+
+                    <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Settings</h4></div></div>
+                    <div class="d-flex flex-row flex-wrap">
+
+                        <div class="form-group col-6 pr-1 pl-0">
+                            <label>f/</label>
+                            <select id="{{imageIndex}}-FStopValue" name="FStopValue" class="form-control js-tags" data-get-data="GetFStopTags" data-placeholder="f/">
+                                <option></option>
+                                {{#exifdata.FNumber}}
+                                <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                {{/exifdata.FNumber}}
+                            </select>
+                            <span validation-for="FStopValue" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-6 pl-1 pr-0">
+                            <label>Shutter Speed</label>
+                            <select id="{{imageIndex}}-ExposureTimeValue" name="ExposureTimeValue" class="form-control js-tags" data-get-data="GetExposureTimeTags" data-placeholder="Shutter Speed">
+                                <option></option>
+                                {{#exposureTime}}
+                                <option id="{{exposureTime}}" value="{{exposureTime}}" selected>{{exposureTime}}</option>
+                                {{/exposureTime}}
+                            </select>
+                            <span validation-for="ExposureTimeValue" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-6 pr-1 pl-0">
+                            <label>ISO</label>
+                            <select id="{{imageIndex}}-ISOValue" name="ISOValue" class="form-control js-tags" data-get-data="GetISOTags" data-placeholder="ISO">
+                                <option></option>
+                                {{#exifdata.ISOSpeedRatings}}
+                                <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                {{/exifdata.ISOSpeedRatings}}
+                            </select>
+                            <span validation-for="ISOValue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6 pl-1 pr-0">
+                            <label>Focal Length</label>
+                            <select id="{{imageIndex}}-FocalLengthValue" name="FocalLengthValue" class="form-control js-tags" data-get-data="GetFocalLengthTags" data-placeholder="Focal Length">
+                                <option></option>
+                                {{#focalLength}}
+                                <option id="{{focalLength}}" value="{{focalLength}}" selected>{{focalLength}}</option>
+                                {{/focalLength}}
+                            </select>
+                            <span validation-for="FocalLengthValue" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Gear</h4></div></div>
+                    <div class="d-flex flex-row flex-wrap">
+                        <div class="form-group col-6 pr-1 pl-0">
+                            <label>Camera Body</label>
+                            <select id="{{imageIndex}}-CameraBodyValue" name="CameraBodyValue" class="form-control js-tags" data-get-data="GetCameraBodyTags" data-placeholder="Camera Body">
+                                <option></option>
+                                {{#exifdata.Model}}
+                                <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                {{/exifdata.Model}}
+                            </select>
+                            <span asp-validation-for="CameraBodyValue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6 pl-1 pr-0">
+                            <label>Lens</label>
+                            <select id="{{imageIndex}}-LensValue" name="LensValue" class="form-control js-tags" data-get-data="GetLensTags" data-placeholder="Lens">
+                                <option></option>
+                                {{#lens}}
+                                <option id="{{lens}}" value="{{lens}}" selected>{{lens}}</option>
+                                {{/lens}}
+                            </select>
+                            <span validation-for="LensValue" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12 pr-0 pl-0">
+                            <label>Light Source</label>
+                            <select id="{{imageIndex}}-LightSourceValue" name="LightSourceValue" class="form-control js-tags" data-get-data="GetLightSourceTags" data-placeholder="Light Source">
+                                <option></option>
+                                {{#exifdata.LightSource}}
+                                <option id="{{.}}" value="{{.}}" selected>{{.}}</option>
+                                {{/exifdata.LightSource}}
+                            </select>
+                            <span validation-for="LightSourceValue" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Location</h4></div></div>
+                    <div id="{{imageIndex}}-locationField" class="form-group">
+                        <input name="Location.FormattedAddress" id="{{imageIndex}}-autocomplete" class="form-control location-field location-autocomplete" type="text" value="" placeholder="Location" />
+                        <input hidden="hidden" name="Location.AdministrativeAreaLevel1" class="form-control location-field administrative_area_level_1" />
+                        <input hidden="hidden" name="Location.AdministrativeAreaLevel2" class="form-control location-field administrative_area_level_2" />
+                        <input hidden="hidden" name="Location.AdministrativeAreaLevel3" class="form-control location-field administrative_area_level_3" />
+                        <input hidden="hidden" name="Location.Country" class="form-control location-field country" />
+                        <input hidden="hidden" name="Location.Locality" class="form-control location-field locality" />
+                        <input hidden="hidden" name="Location.Neighborhood" class="form-control location-field neighborhood" />
+                        <input hidden="hidden" name="Location.Political" class="form-control location-field political" />
+                        <input hidden="hidden" name="Location.PostalCode" class="form-control location-field postal_code" />
+                        <input hidden="hidden" name="Location.Route" class="form-control location-field route" />
+                        <input hidden="hidden" name="Location.StreetNumber" class="form-control location-field street_number" />
+                        <input hidden="hidden" name="Location.Lat" class="form-control location-field lat" value="" />
+                        <input hidden="hidden" name="Location.Lng" class="form-control location-field lng" value="" />
+
+                        @*
+                            <input hidden="hidden" name="Location.StreetAddress" class="form-control location-field StreetAddress" id="{{imageIndex}}-street_number" value="" />
+                            <input hidden="hidden" name="Location.StreetName" class="form-control location-field StreetName" id="{{imageIndex}}-route" value="" />
+                            <input hidden="hidden" name="Location.City" class="form-control location-field City" id="{{imageIndex}}-locality" value="" />
+                            <input hidden="hidden" name="Location.State" class="form-control location-field State" id="{{imageIndex}}-administrative_area_level_1" value="" />
+                            <input hidden="hidden" name="Location.ZipCode" class="form-control location-field ZipCode" id="{{imageIndex}}-postal_code" value="" />
+                            <input hidden="hidden" name="Location.Country" class="form-control location-field Country" id="{{imageIndex}}-country" value="" />
+                            <input hidden="hidden" name="Location.Lat" class="form-control location-field Lat" id="{{imageIndex}}-lat" value="" />
+                            <input hidden="hidden" name="Location.Lon" class="form-control location-field Lon" id="{{imageIndex}}-lon" value="" />
+                        *@
+                        <span validation-for="Location.FormatedAddress" class="text-danger"></span>
+                        <div>
+                            <div id="map" style="width:100%;height:0px;"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row border-bottom mb-2"><div class="col-sm-12"><h4>Display Options</h4></div></div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="{{imageIndex}}-IsBannerImage" name="IsBannerImage" value="true">
+                        <label class="custom-control-label" for="{{imageIndex}}-IsBannerImage">Set as banner image.</label>
+                        <span validation-for="IsBannerImage" class="text-danger"></span>
+                    </div>
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="{{imageIndex}}-IsLogoImage" name="IsLogoImage" value="true">
+                        <label class="custom-control-label" for="{{imageIndex}}-IsLogoImage">Set as logo image.</label>
+                        <span validation-for="IsLogoImage" class="text-danger"></span>
+                    </div>
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="{{imageIndex}}-HideFromGallery" name="HideFromGallery" value="true">
+                        <label class="custom-control-label" for="{{imageIndex}}-HideFromGallery">Hide from gallery.</label>
+                        <span validation-for="HideFromGallery" class="text-danger"></span>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </form>
+</script>

@@ -1,0 +1,151 @@
+﻿@model FetchMe.Models.UserModels.ApplicationUserDetailsVm
+@using FetchMe.Models.AzureConfigurationModels;
+@using FetchMe.Models.PhotographModels;
+@inject Microsoft.Extensions.Options.IOptions<AzureStorageConfiguration> azureOptions
+@{
+    var baseURL300 = $"{azureOptions.Value.AzureStorageBaseURL}300";
+    var baseURL600 = $"{azureOptions.Value.AzureStorageBaseURL}600";
+    var baseURL1500 = $"{azureOptions.Value.AzureStorageBaseURL}1500";
+
+}
+
+
+@{
+    ViewData["Title"] = "FetchMe Photography";
+
+}
+
+
+<div class="d-flex flex-column bg-gradient-bottom-top-100-75 p-2 m-0 w-100 align-self-end">
+
+    <div class="d-flex flex-row pl-2">
+        @if (Model.UserProfileImage != null)
+        {
+        <div class="logo-img-profile align-self-center pr-3">
+            <button id="profile-image-update-modalLabel" type="button" class="btn btn-light p-0" data-toggle="modal" data-target="#profile-image-update-modal">
+                <img class="rounded user-profile-image" style="width:50px; height:50px; object-fit: cover;" base-url="@baseURL300/" src="@baseURL300/@Model.UserProfileImage.ImageUrl" />
+            </button>
+        </div>
+        }
+        else
+        {
+        <div class="logo-img-profile align-self-center pr-3">
+            <button id="profile-image-update-modalLabel" type="button" class="btn btn-light p-0" data-toggle="modal" data-target="#profile-image-update-modal">
+                <img class="rounded user-profile-image" style="width:50px; height:50px; object-fit: cover;" base-url="@baseURL300/" src="~/images/SiteImages/profileImageUpdate.png" />
+            </button>
+        </div>
+        }
+
+        <div class="d-flex justify-content-center mb-2">
+            <h2>@Model.DisplayName</h2>
+        </div>
+
+    </div>
+</div>
+
+
+<ul class="nav nav-tabs px-2 nav-fill" id="myTab" role="tablist">
+    @*
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Discover</a>
+        </li>
+    *@
+    <li class="nav-item">
+        <a class="nav-link active" id="galleries-tab-link" data-toggle="tab" href="#galleries-tab" role="tab" aria-controls="galleries-tab" aria-selected="true">
+            <i class="far fa-clone fa-fw"></i>
+            Galleries
+        </a>
+    </li>
+    @if(Model.IsOwner){
+    <li class="nav-item">
+        <a class="nav-link" id="favorites-tab-link" data-toggle="tab" href="#favorites-tab" role="tab" aria-controls="favorites-tab" aria-selected="false">
+            <i class="fas fa-heart fa-fw"></i>
+            Favorites
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="management-tab-link" data-toggle="tab" href="#management-tab" role="tab" aria-controls="management-tab" aria-selected="false">
+            <i class="fas fa-user-cog fa-fw"></i>
+            Manage
+        </a>
+    </li>
+    }
+</ul>
+<div class="tab-content" id="myTabContent">
+    @*
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+    *@
+    <div class="tab-pane fade show active" id="galleries-tab" role="tabpanel" aria-labelledby="galleries-tab-link">
+
+        @await Html.PartialAsync("~/Views/Galleries/GalleryIndex.cshtml", Model.Galleries.Galleries)
+        
+
+    </div>
+    @if(Model.IsOwner){
+    <div class="tab-pane fade" id="favorites-tab" role="tabpanel" aria-labelledby="favorites-tab-link">
+        @await Html.PartialAsync("~/Views/UserProfile/FavoritesCards.cshtml")
+    </div>
+    <div class="tab-pane fade" id="management-tab" role="tabpanel" aria-labelledby="management-tab-link">
+        @await Html.PartialAsync("~/Views/UserProfile/ManagementCards.cshtml")
+    </div>
+    }
+</div>
+
+
+
+
+<div class="modal fade" id="profile-image-update-modal" tabindex="-1" role="dialog" aria-labelledby="profile-image-update-modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="create-new-gallery-modalLabel">Update Profile Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div id="createImageGallerySpinner" class="d-flex justify-content-center">
+                <i class="fas fa-spinner fa-spin fa-5x p-3 d-none"></i>
+            </div>
+            <div class="modal-body">
+
+                @if (Model.UserProfileImage != null)
+                {
+                <div class="d-flex justify-content-center mb-3">
+                    <img id="imgPreview" class="rounded border" style="width:200px; height:200px; object-fit: cover;" src="@baseURL300/@Model.UserProfileImage.ImageUrl" />
+                </div>
+                }
+                else
+                {
+                <div class="d-flex justify-content-center mb-3">
+                    <img id="imgPreview" class="rounded border" style="width:200px; height:200px; object-fit: cover;" src="~/images/SiteImages/profileImageUpdate.png" />
+                </div>
+                }
+
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="InputImageFile" accept="image/*;capture=camera">
+                        <label class="custom-file-label" for="InputImageFile">Choose file</label>
+                    </div>
+                </div>
+
+                <form id="userProfileImageForm" asp-controller="UserProfileImageAPI" asp-action="PostUserProfileImage" method="post">
+                    <input id="imgBase64" name="ImageData" hidden="hidden" @* asp-for="ImageData" *@ />
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="userProfileImageForm" class="btn btn-primary">
+                    <span aria-hidden="true">Update</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/UserProfileImage/UserProfileImageUpload.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,28 @@
+﻿@model FetchMe.Models.PhotographerModels.PhotographerDetailsDto
+
+    <ul class="nav nav-tabs nav-fill px-2 mt-2" id="photographerTab" role="tablist">
+        @*
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Discover</a>
+        </li>
+        *@
+        <li class="nav-item">
+            <a class="nav-link active" id="galleries-tab-link" data-toggle="tab" href="#@Model.Slug-images-grid" role="tab" aria-controls="@Model.Slug-images-grid" aria-selected="true">
+                <i class="far fa-images fa-fw"></i>
+                Images
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="management-tab-link" data-toggle="tab" href="#@Model.Slug-gallaries" role="tab" aria-controls="@Model.Slug-gallaries" aria-selected="false">
+                <i class="far fa-clone fa-fw"></i>
+                Galleries
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="management-tab-link" data-toggle="tab" href="#@Model.Slug-profile" role="tab" aria-controls="@Model.Slug-profile" aria-selected="false">
+                <i class="fas fa-user fa-fw"></i>
+                Profile
+            </a>
+        </li>
+    </ul>

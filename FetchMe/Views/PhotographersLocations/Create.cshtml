@@ -1,0 +1,425 @@
+﻿@using FetchMe.Models.LocationModels
+@using FetchMe.Models.PhotographerLocationModels
+@model FetchMe.Models.PhotographerLocationModels.PhotographerLocationIndex
+@{
+    ViewData["Title"] = "Locations";
+}
+
+
+<div class="container py-3">
+    <div class="card">
+
+        <div class="card-header text-center">
+
+            <div class="h2">Edit Serviceable Locations</div>
+            <h5>It's a big world out there. The more cities you add, the more of the world FetchMe will know about.</h5>
+        </div>
+
+        <div class="card-body p-2 m-0">
+
+            <form method="post" id="city-search-form" asp-controller="ServiceableCities" asp-action="GetLocations" class="">
+                <div class="text-left">
+                    <div class="d-flex flex-row">
+
+                        <div class="flex-grow-1 pr-1">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group justify-content-start">
+                                <label>Location</label>
+                                <input id="location-autocomplete" name="Location.FormattedAddress" class="form-control location-field location-autocomplete" data-city="true" type="text" placeholder="Enter a City" autocomplete="on" runat="server" />
+                                <input hidden="hidden" name="Location.Id" class="form-control location-field location_id" />
+                                <input hidden="hidden" name="Location.AdministrativeAreaLevel1" class="form-control location-field administrative_area_level_1" />
+                                <input hidden="hidden" name="Location.AdministrativeAreaLevel2" class="form-control location-field administrative_area_level_2" />
+                                <input hidden="hidden" name="Location.AdministrativeAreaLevel3" class="form-control location-field administrative_area_level_3" />
+                                <input hidden="hidden" name="Location.Country" class="form-control location-field country" />
+                                <input hidden="hidden" name="Location.Locality" class="form-control location-field locality" />
+                                <input hidden="hidden" name="Location.Neighborhood" class="form-control location-field neighborhood" />
+                                <input hidden="hidden" name="Location.Political" class="form-control location-field political" />
+                                <input hidden="hidden" name="Location.PostalCode" class="form-control location-field postal_code" />
+                                <input hidden="hidden" name="Location.Route" class="form-control location-field route" />
+                                <input hidden="hidden" name="Location.StreetNumber" class="form-control location-field street_number" />
+                                <input hidden="hidden" name="Location.Lat" class="form-control location-field lat" value="" />
+                                <input hidden="hidden" name="Location.Lng" class="form-control location-field lng" value="" />
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="form-group pl-1">
+                                <label>Distance</label>
+                                <select id="distance" name="Distance" class="form-control">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="250">250</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="card-footer">
+
+            <div class="container px-0">
+                <div class="d-flex flex-row">
+
+                    <div class="w-50 pr-2 border-right">
+
+                        <div class="d-flex flex-column mb-3">
+                            <button type="button" class="btn btn-primary add-all-locations" style="display: none;" data-locations="">Add all</button>
+                        </div>
+
+                        <div id="not-added"></div>
+
+                    </div>
+                    <div class="w-50 pl-2">
+
+                        <div class="d-flex flex-column mb-3">
+                            <button type="button" class="btn btn-danger remove-all-locations" style="display: none;" data-locations="">Remove all</button>
+                        </div>
+
+                        <div id="added"></div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container py-3">
+
+    <div class=" card">
+
+        <div class="card-header text-center">
+            <div class="h2">All Serviceable Locations</div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="accordion" id="location-accordion">
+
+                @foreach (var group in Model.PhotographerLocations.GroupBy(x => x.AdministrativeAreaLevel1))
+                {
+                    var state = group.OrderBy(x => x.AdministrativeAreaLevel1);
+
+                    <div class="mb-3">
+
+                        <button class="btn btn-lg btn-primary w-100 text-left"
+                                id="@group.Key-accordion"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#@group.Key-accordion-body"
+                                aria-expanded="true"
+                                aria-controls="@group.Key-accordion-body">
+
+                            @group.Key
+
+                        </button>
+
+                        
+                        <div id="@group.Key-accordion-body"
+                            class="card-body bg-gray-9 collapse rounded-bottom"
+                            aria-labelledby="@group.Key-accordion"
+                            data-parent="#@group.Key-accordion">
+
+                            @foreach (Location location in state)
+                            {
+                                <div>@location.Locality</div>
+                            }
+                        </div>
+
+
+                    </div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <!--Ajax Typeahead for location dropdown-->
+    <script type="text/javascript">
+
+        var lat = 180;
+        var lon = 90;
+        var dist = 10;
+        var city;
+        var state;
+
+        $(document).ready(function () {
+
+
+            setGridSearchFormMapsAutocomplete($("#city-search-form")).then(function (autocomplete) {
+                autocomplete.addListener('place_changed', function () {
+                    getServiceableCities();
+                    $(".add-all-locations").show();
+                    $(".remove-all-locations").show();
+                })
+            });
+
+
+
+        });
+
+        $('#distance').on("change", function () {
+            getServiceableCities();
+        });
+
+        $('#not-added').on('click', 'button.add-location', function () {
+            var locationId = this.id;
+            addLocations(locationId);
+        });
+
+        $('.add-all-locations').on('click', function () {
+            locationIds = $.unique($('#not-added div div div button[id]').map(function () { return this.id; }).get());
+            addAllLocations(locationIds);
+        });
+
+        $('#added').on('click', 'button.remove-location', function () {
+            var locationId = this.id;
+            deleteLocation(locationId);
+        });
+
+        $('.remove-all-locations').on('click', function () {
+            locationIds = $.unique($('#added div div div button[id]').map(function () { return this.id; }).get());
+            deleteAllLocations(locationIds);
+        });
+
+        function getServiceableCities() {
+            var form = $('#city-search-form');
+            var url = form.url;
+            var data = form.serialize();
+            
+            $('#not-added').html("");
+            $('#added').html("");
+
+            $.ajax({
+                type: "POST",
+                url: "/PhotographersLocations/GetLocations/",
+                data: form.serialize(),
+                success: function (response) {
+                    
+                    var addLocationIds = [];
+                    var removeLocationIds = [];
+                    $.each(response, function (i) {
+
+                        if (response[i].photographerHas == true) {
+                            removeLocationIds.push(response[i].id);
+                            var button = '<button id="' + response[i].id + '" type="button" class="btn btn-danger w-100 remove-location">Remove</button>';
+                            //$("#added").append('<div class="card p-2 mb-3"><div class="d-flex align-content-between flex-wrap"><div class="col-md-4">' + response[i].city + ', ' + response[i].state + '</div><div class="distance col-md-2" data-distance="' + response[i].distance + '">' + response[i].distance + '</div><div class="col-md-6">' + button + '</div></div></div>');
+                            $("#added").append('<div class="card photographer-location-card p-2 mb-3"><div class="d-flex flex-column flex-md-row"><div class="flex-fill align-self-center">' + response[i].formattedAddress + '</div><div class="distance align-self-center mr-md-2" data-distance="' + response[i].distance + '">' + response[i].distance + ' Miles</div><div class="w-md-25">' + button + '</div></div></div>');
+
+                        }
+                        else {
+                            addLocationIds.push(response[i].id);
+                            var button = '<button id="' + response[i].id + '" type="button" class="btn btn-primary w-100 add-location">Add</button>';
+                            //$("#not-added").append('<div class="card p-2 mb-3"><div class="d-flex align-content-between flex-wrap"><div class="col-md-4">' + response[i].city + ', ' + response[i].state + '</div><div class="distance col-md-2" data-distance="' + response[i].distance + '">' + response[i].distance + '</div><div class="col-md-6">' + button + '</div></div></div>');
+                            $("#not-added").append('<div class="card photographer-location-card p-2 mb-3"><div class="d-flex flex-column flex-md-row"><div class="flex-fill align-self-center">' + response[i].formattedAddress + '</div><div class="distance align-self-center mr-md-2" data-distance="' + response[i].distance + '">' + response[i].distance + ' Miles</div><div class="w-md-25">' + button + '</div></div></div>');
+
+                        }
+                    });
+
+                    if ($.isEmptyObject(addLocationIds)) {
+                        $(".add-all-locations").prop("disabled", true);
+                        $(".add-all-locations").html("Locations already added");
+                    } else {
+                        $(".add-all-locations").prop("disabled", false);
+                        $(".add-all-locations").html("Add All");
+                    }
+
+                    if ($.isEmptyObject(removeLocationIds)) {
+                        $(".remove-all-locations").prop("disabled", true);
+                        $(".remove-all-locations").html("No locations added");
+                    } else {
+                        $(".remove-all-locations").prop("disabled", false);
+                        $(".remove-all-locations").html("Remove All");
+                    }
+
+                    $(".add-all-locations").show();
+                    $(".remove-all-locations").show();
+                    /**/
+                },
+                failure: function (response) {
+                    //console.log(response);
+                }
+            });
+
+            /*
+            $.post(url, data, function (response) {
+                console.log(response);
+                alert('Posted using jQuery');
+            });
+            */
+        }
+
+        function addLocations(locationId) {
+
+            $(document.getElementById(locationId))
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $.ajax({
+                type: "POST",
+                url: "/PhotographersLocations/AddPhotographersCity/",
+                contentType: 'application/json',
+                data: JSON.stringify(locationId),
+                success: function (response) {
+
+                    moveLocationElement(locationId, '#added');
+
+                },
+                failure: function (response) {
+                    //console.log(response);
+                }
+            });
+        }
+
+        function addAllLocations(locationIds) {
+
+            $(".add-all-locations")
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $(".add-location")
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $.ajax({
+                type: "POST",
+                url: "/PhotographersLocations/AddAllPhotographersCity/",
+                contentType: 'application/json',
+                data: JSON.stringify(locationIds),
+                success: function (response) {
+
+                    bulkMoveLocationElement(locationIds, '#added');
+
+                },
+                failure: function (response) {
+                    //console.log(response);
+                }
+            });
+
+        }
+
+        function deleteLocation(locationId) {
+
+            $(document.getElementById(locationId))
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $.ajax({
+                type: "POST",
+                url: "/PhotographersLocations/DeletePhotographersCity/",
+                contentType: 'application/json',
+                data: JSON.stringify(locationId),
+                success: function (response) {
+
+                    moveLocationElement(locationId, '#not-added');
+
+                },
+                failure: function (response) {
+                    //console.log(response);
+                }
+            });
+
+        }
+
+        function deleteAllLocations(locationIds) {
+            $(".remove-all-locations")
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $(".remove-location")
+                .prop("disabled", true)
+                .html('<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>');
+
+            $.ajax({
+                type: "POST",
+                url: "/PhotographersLocations/DeleteAllPhotographersCity/",
+                contentType: 'application/json',
+                data: JSON.stringify(locationIds),
+                success: function (response) {
+
+                    bulkMoveLocationElement(locationIds, '#not-added');
+
+                },
+                failure: function (response) {
+                    //console.log(response);
+                }
+            });
+
+        }
+
+        function bulkMoveLocationElement(locationIds, listId) {
+            $.each(locationIds, function (key, value) {
+                moveLocationElement(value, listId)
+            });
+        }
+
+        function moveLocationElement(locationId, listId) {
+
+            var record = $(document.getElementById(locationId)).parent('div').parent('div').parent('div');
+            var recordDistance = record.find('.distance').data('distance');
+
+            record.detach();
+
+            if (record.find('button').hasClass("remove-location")) {
+                record.find('button')
+                    .removeClass("btn-danger remove-location")
+                    .addClass("btn-primary add-location")
+                    .html('Add')
+                    .prop("disabled", false);
+            } else {
+                record.find('button')
+                    .removeClass("btn-primary add-location")
+                    .addClass("btn-danger remove-location")
+                    .html('Remove')
+                    .prop("disabled", false);
+            }
+
+            var appendElement = $(listId + ">div>div>.distance").filter(function () {
+                return $(this).data("distance") >= recordDistance;
+            }).first().parent('div').parent('div').before(record);
+
+            if (appendElement.length === 0) {
+                $(listId).append(record);
+            }
+
+            if ($('#added>div').length > 0) {
+                $(".remove-all-locations")
+                    .prop("disabled", false)
+                    .html('Remove All');
+            } else {
+                $(".remove-all-locations")
+                    .prop("disabled", true)
+                    .html('No locations added');
+            }
+
+            if ($('#not-added>div').length > 0) {
+                $(".add-all-locations")
+                    .prop("disabled", false)
+                    .html('Add All');
+            } else {
+                $(".add-all-locations")
+                    .prop("disabled", true)
+                    .html('All locations added');
+            }
+        }
+
+    </script>
+
+}

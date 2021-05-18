@@ -1,0 +1,194 @@
+﻿@addTagHelper *, Vereyon.Web.FlashMessage
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FetchMe</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#00ffff">
+
+    <link rel="stylesheet" href="~/css/custom/bootstrap.min.css" />
+    <!--<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/slate/bootstrap.min.css" rel="stylesheet" integrity="sha384-idNH3UIOiZbCf8jxqu4iExnH34y5UovfW/Mg8T5WfNvoJolDvknoNqR69V2OexgF" crossorigin="anonymous">-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet" crossorigin="anonymous" defer async>
+
+    <!--justified Gallery-->
+    <link rel="stylesheet" href="~/lib/justifiedGallery/justifiedGallery.min.css" asp-append-version="true" async />
+
+    <!-- Select 2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" asp-append-version="true" async />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" asp-append-version="true" async />
+
+    <!--Grid-->
+    <link rel="stylesheet" href="~/lib/ListGrid/Grid.css" asp-append-version="true" async />
+
+    <!--Grid-->
+    <link rel="stylesheet" href="~/lib/LayeredModal/LayeredModal.css" asp-append-version="true" async />
+
+    <!--Grid-->
+    <link rel="stylesheet" href="~/lib/FullModal/full-modal.css" asp-append-version="true" async />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        html, body, .body {
+            height: 100%;
+        }
+
+        body, .body {
+            display: flex;
+            flex-flow: column;
+        }
+        .main-content {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        .padded-content {
+            padding: 2em;
+        }
+        .alert {
+            margin: 1em;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+@{
+    var pageTitle = "";
+    if (@ViewData["Title"] == null)
+    {
+        pageTitle = "FetchMe Photography";
+    }
+    else
+    {
+        pageTitle = ViewData["Title"].ToString();
+    }
+
+    var backgroundImage = "";
+    if (ViewData["BackgroundImage"] != null)
+    {
+        backgroundImage = $"background: url({ViewData["BackgroundImage"]}) no-repeat center center fixed; background-color: #3a3f44; -webkit-background-size: cover;-moz-background-size: cover;-o-background size: cover;background-size: cover;";
+    }
+
+    var contentContainer = "";
+    if (ViewData["ContentContainer"] == null)
+    {
+        contentContainer = "py-2";
+    }
+    else
+    {
+        contentContainer = ViewData["ContentContainer"].ToString();
+    }
+}
+<body style="@backgroundImage">
+    @await Html.PartialAsync("_SideDrawer")
+
+    <header>
+
+        <div class="d-flex flex-row bg-dark border-bottom box-shadow-bottom p-2">
+
+            <button role="button" type="button" class="btn btn-light" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-bars pr-2" aria-hidden="true"></i>
+                @pageTitle
+            </button>
+
+            @RenderSection("PageSearch", required: false)
+        </div>
+    </header>
+
+    <div id="main-content" class="container-fluid p-0 main-content @contentContainer scroll">
+        <flash dismissable="true" />
+        @RenderBody()
+    </div>
+
+    @*
+        <footer>
+            <div class="d-flex flex-row border-top bg-dark box-shadow-top p-2">
+
+                <button role="button" type="button" class="btn btn-sm btn-light" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="d-flex flex-grow-1 justify-content-end">
+                    @RenderSection("PageFooter", required: false)
+                </div>
+
+            </div>
+        </footer>
+    *@
+    <div id="authstatus"></div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        @await Html.PartialAsync("~/Views/Galleries/AddImageToGalleryModal.cshtml")
+        @await Html.PartialAsync("~/Views/Galleries/CreateNewGalleryModal.cshtml")
+    }
+
+    @{
+        //Templates for photographs
+        await Html.RenderPartialAsync("~/Views/Photographs/PhotographIndexItem.cshtml");
+        await Html.RenderPartialAsync("~/Views/Photographs/PhotographIndexModal.cshtml");
+        await Html.RenderPartialAsync("~/Views/Photographs/PhotographIndexModalItem.cshtml");
+        await Html.RenderPartialAsync("~/Views/Photographs/PhotographIndexSearch.cshtml");
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+
+    <!-- Like -->
+    <script src="~/lib/Likes/js/Like.js" asp-append-version="true"></script>
+
+    <!-- Mustache -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js" asp-append-version="true"></script>
+
+    <!-- jQuery Validate -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js" asp-append-version="true" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.min.js" asp-append-version="true" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js" asp-append-version="true" defer></script>
+
+    <!--Google Maps-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3k6Xq5aakIH3vfptKJst7GLjTIapwwyA&libraries=places" asp-append-version="true" defer></script>
+
+    <!--justified Gallery-->
+    <script src="~/lib/justifiedGallery/jquery.justifiedGallery.min.js" asp-append-version="true"></script>
+
+    <!-- Select 2 -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.full.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/custom/Select2/selectTags.js" asp-append-version="true"></script>
+
+    <!--Location Input Field-->
+    <script type="text/javascript" src="~/js/custom/Location/LocationInputField.js" asp-append-version="true"></script>
+
+    <!--Hammer JS-->
+    <script rel="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+    <!--Grid-->
+    <script src="~/lib/ListGrid/IndexGrid.js" asp-append-version="true"></script>
+
+    <!--Layered Modal-->
+    <script src="~/lib/LayeredModal/LayeredModal.js" asp-append-version="true"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XSSS1NBCGX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-XSSS1NBCGX');
+    </script>
+
+    <!--Galleries-->
+    <script src="~/lib/Galleries/Galleries.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,15 @@
+﻿@using FetchMe.Models.GalleryModels
+@model FetchMe.Models.GalleryModels.UpsertImageInGalleryGrouped
+    <div id="galleriesImageIsIn">
+        @foreach (UpsertImageInGalleryVM gallery in Model.InGallery)
+        {
+            @await Html.PartialAsync("~/views/Galleries/AddToGalleryIndexItem.cshtml", gallery);
+        }
+    </div>
+    <hr />
+    <div id="galleriesImageNotIn">
+        @foreach (UpsertImageInGalleryVM gallery in Model.NotInGallery)
+        {
+            @await Html.PartialAsync("~/views/Galleries/AddToGalleryIndexItem.cshtml", gallery);
+        }
+    </div>

@@ -1,0 +1,46 @@
+﻿@model FetchMe.Models.UserModels.ApplicationUserDetailsVm
+@{
+    ViewData["Title"] = "Create Profile";
+}
+
+<div class="container pt-3">
+
+    <div class="d-flex flex-column text-center">
+        @if (string.IsNullOrWhiteSpace(Model.Slug))
+        {
+
+            <h1>Welcome to FetchMe Photography!</h1>
+            <h5>Your profile is almost done. Please, answer a few questions for us.</h5>
+        }
+        <span>This information is for your personal profile. Your photographer, model and vendor profile are managed seperately.</span>
+        <hr />
+    </div>
+    <div class="d-flex justify-content-center">
+        <form class="rounded border box-shadow p-3" asp-controller="UserProfile" asp-action="UpdateDetails">
+
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" placeholder="@Html.DisplayNameFor(m => m.FirstName)" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" placeholder="@Html.DisplayNameFor(m => m.LastName)" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName"></label>
+                <input asp-for="DisplayName" placeholder="@Html.DisplayNameFor(m => m.DisplayName)" class="form-control" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug"></label>
+                <p>example: www.fetchme.photography/users/{your-slug}</p>
+                <input asp-for="Slug" placeholder="@Html.DisplayNameFor(m => m.Slug)" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <button type="submit" value="Save" class="btn btn-outline-primary float-right">Save</button>
+        </form>
+    </div>
+
+</div>

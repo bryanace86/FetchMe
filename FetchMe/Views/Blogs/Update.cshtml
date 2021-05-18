@@ -1,0 +1,30 @@
+﻿@using FetchMe.Models.BlogModels
+@model BlogVM
+
+    <div id="blog-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="blog-edit-modal-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-form-margin">
+
+                @await Html.PartialAsync("~/views/shared/Modal/ModalCloseHeader.cshtml")
+
+                <div class="modal-body rounded-bottom h-100 overflow-auto">
+                    <form id="blog-edit-form" asp-controller="Blogs" asp-action="Update">
+                        <input id="blog-id-edit" asp-for="Id" />
+                        <label asp-for="Title" class="control-label"></label>
+                        <input id="blog-title-edit" asp-for="Title" type="text" class="form-control" />
+                        <label asp-for="Slug" class="control-label"></label>
+                        <input id="blog-slug-edit" asp-for="Slug" type="text" class="form-control" />
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea id="blog-description-edit" asp-for="Description" class="form-control">
+				        Default text
+			            </textarea>
+                        <label asp-for="ThumbnailId" class="control-label"></label>
+                        <input id="blog-thumbnailid-edit" asp-for="ThumbnailId" type="text" class="form-control" />
+                    </form>
+                </div>
+
+                @await Html.PartialAsync("~/views/shared/Modal/ModalEditFooter.cshtml", "blog-edit-form")
+
+            </div>
+        </div>
+    </div>

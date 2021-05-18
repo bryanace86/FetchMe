@@ -1,0 +1,97 @@
+﻿@using FetchMe.Models.SupportModels;
+@model FetchMe.Models.SupportModels.SupportTicketDetails
+
+
+
+
+    <div class="container p-3 d-flex flex-column">
+
+        @if (User.IsInRole("Support"))
+        {
+            <div class="d-flex flex-column rounded box-shadow mb-3">
+
+                <div class="d-flex h3 text-dark bg-light rounded-top p-2">
+                    Change Status
+                </div>
+                <form asp-controller="Support" asp-action="ChangeStatus" class="p-3">
+                    <input name="TicketId" value="@Model.Id" hidden="hidden"/>
+                    <select class="form-control mb-3" name="Status" asp-items="ViewBag.AvailableStatuses">
+                        <option value="0" selected disabled>Select Status</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-light float-right">
+                        Submit
+                    </button>
+
+                </form>
+            </div>
+        }
+
+        
+
+
+        <div class="d-flex flex-column rounded box-shadow mb-3">
+
+            <div class="d-flex h3 text-dark bg-light rounded-top p-2">
+                Reply
+            </div>
+            <form id="response-form" asp-controller="Support" asp-action="CreateResponse" class="p-3">
+
+                <div class="form-group w-100">
+                    <textarea name="Response" class="form-control" data-placeholder="@Html.DisplayNameFor(m => m.Response.Response)"></textarea>
+                    <span asp-validation-for="Response.Response" class="text-danger"></span>
+                </div>
+
+                @if (User.HasClaim(x => x.Type == "Support"))
+                {
+                    <div class="form-group">
+                        <label asp-for="Status"></label>
+                        <select class="form-control" name="Status.Id" asp-items="ViewBag.AvailableStatuses"></select>
+                        <span asp-validation-for="Response.Response" class="text-danger"></span>
+                    </div>
+                }
+
+                <input hidden="hidden" value="@Model.Id" name="SupportTicketId" />
+
+                <button type="submit" class="btn btn-light float-right">
+                    Submit
+                </button>
+
+            </form>
+        </div>
+
+        <div class="d-flex flex-column rounded box-shadow mb-3 ">
+
+            <div class="text-dark bg-light rounded-top p-3">
+                <div class="h3 text-dark">@Model.Title</div>
+                <div class="d-flex flex-row">
+
+                    <div>@Model.CreatedByName</div>
+                    <div class="flex-grow-1">@Model.Created</div>
+                    <div>@Model.Status.Status</div>
+
+                </div>
+            </div>
+
+            <div class="d-flex p-3">
+                @Model.Body
+            </div>
+
+        </div>
+
+
+        <div id="ticket-responses">
+            @foreach (SupportTicketResponseDetails response in Model.Responses)
+            {
+                <partial name="~/Views/Support/ResponseDetails.cshtml" model="response" />
+            }
+        </div>
+
+    </div>
+
+
+
+
+
+
+
